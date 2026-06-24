@@ -7,10 +7,9 @@ const backendDir = path.join(__dirname, 'backend');
 if (isProd) {
   // Production: backend serves both API and frontend
   console.log('Starting server (production mode)...');
-  const server = spawn('node', ['server.js'], {
+  const server = spawn(process.execPath, ['server.js'], {
     cwd: backendDir,
-    stdio: 'inherit',
-    shell: true
+    stdio: 'inherit'
   });
   server.on('exit', (code) => process.exit(code));
 } else {
@@ -18,10 +17,9 @@ if (isProd) {
   const frontendDir = path.join(__dirname, 'frontend');
 
   console.log('Starting backend server (port 5000)...');
-  const backend = spawn('node', ['server.js'], {
+  const backend = spawn(process.execPath, ['server.js'], {
     cwd: backendDir,
-    stdio: 'pipe',
-    shell: true
+    stdio: 'pipe'
   });
 
   backend.stdout.on('data', (d) => process.stdout.write(`[backend] ${d}`));
@@ -29,10 +27,9 @@ if (isProd) {
 
   setTimeout(() => {
     console.log('\nStarting frontend server (port 5500)...');
-    const frontend = spawn('node', ['frontend-server.js'], {
+    const frontend = spawn(process.execPath, ['frontend-server.js'], {
       cwd: backendDir,
-      stdio: 'pipe',
-      shell: true
+      stdio: 'pipe'
     });
 
     frontend.stdout.on('data', (d) => process.stdout.write(`[frontend] ${d}`));

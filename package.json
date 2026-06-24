@@ -1,0 +1,10 @@
+{
+  "name": "syndicatestore",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node start.js",
+    "build": "cd backend && npm install",
+    "postinstall": "cd backend && npm install"
+  }
+}
