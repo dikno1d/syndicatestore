@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | SYndicate Store</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+  <div class="glow-bg"></div>
+
+  <div class="admin-wrapper">
+    <!-- Sidebar -->
+    <aside class="sidebar-nav" id="sidebar">
+      <div class="sidebar-brand">
+        <img id="sidebar-logo" class="sidebar-logo-img" src="/images/logo.png" alt="Logo" onerror="this.style.display='none'">
+        <i class="fa-solid fa-user-shield logo-icon" id="sidebar-logo-icon"></i>
+      </div>
+      <nav class="sidebar-menu">
+        <button class="menu-btn active" data-target="section-products">
+          <i class="fa-solid fa-box-open"></i> Products
+        </button>
+        <button class="menu-btn" data-target="section-customers">
+          <i class="fa-solid fa-users"></i> Customers
+        </button>
+        <button class="menu-btn" data-target="section-customer-orders">
+          <i class="fa-solid fa-cart-shopping"></i> Orders
+        </button>
+        <button class="menu-btn" data-target="section-invoices">
+          <i class="fa-solid fa-file-invoice-dollar"></i> Invoices
+        </button>
+        <button class="menu-btn" data-target="section-payments">
+          <i class="fa-solid fa-credit-card"></i> Payments
+        </button>
+        <button class="menu-btn" data-target="section-chats">
+          <i class="fa-solid fa-comment-dots"></i> Chats
+        </button>
+        <button class="menu-btn" data-target="section-settings">
+          <i class="fa-solid fa-sliders"></i> Settings
+        </button>
+        <button class="menu-btn" data-target="section-security">
+          <i class="fa-solid fa-shield-halved"></i> Security
+        </button>
+        <a href="http://127.0.0.1:5500" class="menu-btn storefront-btn" target="_blank">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> View Storefront
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="admin-info-pill" id="admin-info-pill">
+          <i class="fa-solid fa-circle-user"></i>
+          <span id="admin-username-display">Admin</span>
+        </div>
+        <button class="btn btn-logout" id="logout-btn">
+          <i class="fa-solid fa-power-off"></i> Log Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Area -->
+    <main class="main-content">
+      <header class="content-header">
+        <div class="header-left">
+          <button class="sidebar-toggle-btn" id="sidebar-toggle"><i class="fa-solid fa-bars"></i></button>
+          <h1 id="dashboard-title">Products Manager</h1>
+        </div>
+        <div class="header-right">
+          <div class="user-pill">
+            <span class="status-indicator"></span>
+            <span id="header-username">Admin</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Alert Banner -->
+      <div class="alert-banner" id="status-alert">
+        <span id="alert-text">Operation completed.</span>
+        <i class="fa-solid fa-xmark alert-close" id="alert-close"></i>
+      </div>
+
+      <!-- =================== SECTION: PRODUCTS =================== -->
+      <section class="dashboard-section active" id="section-products">
+        <div class="section-actions">
+          <div class="search-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="admin-search" placeholder="Search products...">
+          </div>
+          <button class="btn btn-primary btn-glow" id="btn-add-product">
+            <i class="fa-solid fa-plus"></i> Add Product
+          </button>
+        </div>
+        <div class="table-container">
+          <table class="products-table">
+            <thead>
+              <tr>
+                <th>Image</th><th>Name</th><th>Category</th>
+                <th>Price</th><th>Badge</th><th>Featured</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="products-table-body">
+              <tr><td colspan="7" class="loading-td"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================== SECTION: CUSTOMERS =================== -->
+      <section class="dashboard-section" id="section-customers">
+        <div class="section-actions">
+          <div class="search-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="customers-search" placeholder="Search by name or email...">
+          </div>
+          <span style="color:var(--text-gray);font-size:0.85rem" id="customers-count">0 users</span>
+        </div>
+        <div class="table-container">
+          <table class="products-table">
+            <thead>
+              <tr>
+                <th>Name</th><th>Email</th><th>Google ID</th><th>Role</th><th>Last Login</th><th>Joined</th>
+              </tr>
+            </thead>
+            <tbody id="customers-table-body">
+              <tr><td colspan="6" class="loading-td"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================== SECTION: CUSTOMER ORDERS =================== -->
+      <section class="dashboard-section" id="section-customer-orders">
+        <div class="section-actions">
+          <div class="search-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="orders-search" placeholder="Search by customer name or email...">
+          </div>
+          <div class="search-wrap" style="width:auto;min-width:140px">
+            <i class="fa-solid fa-filter"></i>
+            <select id="orders-status-filter" style="background:transparent;border:none;outline:none;color:var(--text-white);font-family:var(--font-body);width:100%">
+              <option value="">All Payment Status</option>
+              <option value="pending">Pending</option>
+              <option value="paid">Paid</option>
+              <option value="failed">Failed</option>
+              <option value="cash_on_delivery">Cash on Delivery</option>
+            </select>
+          </div>
+          <div class="search-wrap" style="width:auto;min-width:140px">
+            <i class="fa-solid fa-filter"></i>
+            <select id="orders-shipping-filter" style="background:transparent;border:none;outline:none;color:var(--text-white);font-family:var(--font-body);width:100%">
+              <option value="">All Shipping</option>
+              <option value="yet_to_pack">Yet to Pack</option>
+              <option value="packed">Packed</option>
+              <option value="shipped">Shipped</option>
+              <option value="delivered">Delivered</option>
+            </select>
+          </div>
+          <span style="color:var(--text-gray);font-size:0.85rem" id="orders-count">0 orders</span>
+        </div>
+        <div class="table-container">
+          <table class="products-table">
+            <thead>
+              <tr>
+                <th>Customer</th><th>Email</th><th>Products</th><th>Amount</th><th>Payment</th><th>Status</th><th>Ref ID</th><th>Shipping</th><th>Tracking</th><th>Date</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="orders-table-body">
+              <tr><td colspan="11" class="loading-td"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================== SECTION: INVOICES =================== -->
+      <section class="dashboard-section" id="section-invoices">
+        <div class="section-actions">
+          <div class="search-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="invoice-search" placeholder="Search by customer, invoice #...">
+          </div>
+          <button class="btn btn-primary btn-glow" id="btn-create-invoice">
+            <i class="fa-solid fa-plus"></i> New Invoice
+          </button>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid" id="invoice-stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-file-invoice"></i></div>
+            <div class="stat-data"><span id="stat-total-inv">0</span><label>Total Invoices</label></div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-icon"><i class="fa-solid fa-money-bill-wave"></i></div>
+            <div class="stat-data"><span id="stat-total-rev">Rs. 0</span><label>Total Revenue</label></div>
+          </div>
+          <div class="stat-card yellow">
+            <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
+            <div class="stat-data"><span id="stat-pending">0</span><label>Pending Orders</label></div>
+          </div>
+          <div class="stat-card blue">
+            <div class="stat-icon"><i class="fa-solid fa-truck"></i></div>
+            <div class="stat-data"><span id="stat-transit">0</span><label>In Transit</label></div>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="products-table">
+            <thead>
+              <tr>
+                <th>Invoice #</th><th>Date</th><th>Customer</th>
+                <th>Total</th><th>Payment</th><th>Status</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="invoices-table-body">
+              <tr><td colspan="7" class="loading-td"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================== SECTION: PAYMENTS =================== -->
+      <section class="dashboard-section" id="section-payments">
+        <div class="section-actions">
+          <div class="search-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="payment-search" placeholder="Search by transaction ID or name...">
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="products-table">
+            <thead>
+              <tr>
+                <th>Payment ID</th><th>Date</th><th>Product</th>
+                <th>Amount</th><th>Ref ID</th><th>Status</th><th>Customer</th><th>Order Ref</th>
+              </tr>
+            </thead>
+            <tbody id="payments-table-body">
+              <tr><td colspan="8" class="loading-td"><i class="fa-solid fa-spinner fa-spin"></i> Loading payments...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================== SECTION: CHATS =================== -->
+      <section class="dashboard-section" id="section-chats">
+        <div class="chats-container">
+          <div class="chats-sidebar">
+            <div class="chats-sidebar-header">
+              <h2><i class="fa-solid fa-comment-dots"></i> Customer Chats</h2>
+              <select id="chats-sort" class="chats-sort">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+              </select>
+            </div>
+            <div class="chats-list" id="chats-list">
+              <div class="chats-loading"><i class="fa-solid fa-spinner fa-spin"></i> Loading chats...</div>
+            </div>
+          </div>
+          <div class="chats-conversation" id="chats-conversation">
+            <div class="chats-conversation-empty" id="chats-conversation-empty">
+              <i class="fa-solid fa-comment-dots" style="font-size:3rem;color:var(--text-gray);margin-bottom:15px"></i>
+              <p>Select a customer to view their chat.</p>
+            </div>
+            <div class="chats-conversation-active" id="chats-conversation-active" style="display:none">
+              <div class="chats-conversation-header" id="chats-conversation-header">
+                <span id="chats-customer-name"></span>
+              </div>
+              <div class="chats-conversation-messages" id="chats-conversation-messages"></div>
+              <div class="chats-conversation-input">
+                <input type="text" id="chats-admin-input" class="chat-input" placeholder="Type a reply..." maxlength="1000">
+                <button class="chat-send-btn" id="chats-admin-send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================== SECTION: SETTINGS =================== -->
+      <section class="dashboard-section" id="section-settings">
+        <div class="settings-card">
+          <h2><i class="fa-solid fa-sliders"></i> Contact & Purchase Settings</h2>
+          <p class="settings-subtext">These details power the "Contact to Buy" buttons on the storefront.</p>
+          <form id="settings-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="s-whatsapp"><i class="fa-brands fa-whatsapp" style="color:#25d366"></i> WhatsApp Number</label>
+                <input type="text" id="s-whatsapp" placeholder="+9779801234567">
+                <span class="field-hint">Include country code without spaces.</span>
+              </div>
+              <div class="form-group">
+                <label for="s-discord"><i class="fa-brands fa-discord" style="color:#5865f2"></i> Discord Invite Link</label>
+                <input type="text" id="s-discord" placeholder="https://discord.gg/yourserver">
+                <span class="field-hint">Full invite link for your Discord server.</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="s-instagram"><i class="fa-brands fa-instagram" style="color:#e1306c"></i> Instagram Username</label>
+              <input type="text" id="s-instagram" placeholder="syndicate_store">
+              <span class="field-hint">Username only, no full URL.</span>
+            </div>
+            <div class="form-group">
+              <label for="s-message">WhatsApp Pre-filled Message Template</label>
+              <textarea id="s-message" rows="3"></textarea>
+              <span class="field-hint">Use <strong>{product_name}</strong> and <strong>{product_price}</strong> as dynamic variables.</span>
+            </div>
+            <div class="form-group">
+              <label><i class="fa-solid fa-qrcode" style="color:var(--primary-neon)"></i> Scan to Pay QR Code</label>
+              <div class="qr-upload-row">
+                <input type="text" id="s-qr-url" placeholder="https://example.com/qr.png">
+                <span class="field-hint">Or upload a QR image:</span>
+                <input type="file" id="s-qr-file" accept="image/*">
+              </div>
+              <div class="image-live-preview" style="margin-top:10px">
+                <span>QR Preview:</span>
+                <img id="qr-preview-box" src="" alt="QR Preview" style="max-width:150px;max-height:150px;border-radius:8px;">
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary" id="btn-save-settings">
+              <i class="fa-solid fa-floppy-disk"></i> Save Settings
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- =================== SECTION: SECURITY =================== -->
+      <section class="dashboard-section" id="section-security">
+        <!-- Multi-Admin Accounts -->
+        <div class="settings-card security-card" style="margin-bottom:30px">
+          <h2><i class="fa-solid fa-users-gear"></i> Admin Accounts <span style="font-size:0.7rem;color:var(--text-gray);font-weight:400;margin-left:8px">(Max 5)</span></h2>
+          <p class="settings-subtext">Manage admin accounts for your team. You can create up to 5 admin accounts.</p>
+
+          <div class="table-container" style="margin-bottom:18px">
+            <table class="products-table">
+              <thead>
+                <tr>
+                  <th>Username</th><th>Role</th><th>Created</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-accounts-tbody">
+                <tr><td colspan="4" class="loading-td"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="divider"></div>
+          <h3 class="form-section-title"><i class="fa-solid fa-user-plus"></i> Create New Admin</h3>
+          <form id="new-admin-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label>New Admin Username *</label>
+                <div class="input-icon-wrap">
+                  <i class="fa-solid fa-user"></i>
+                  <input type="text" id="new-admin-user" placeholder="At least 3 characters" required minlength="3">
+                </div>
+              </div>
+              <div class="form-group">
+                <label>New Admin Password *</label>
+                <div class="input-icon-wrap">
+                  <i class="fa-solid fa-lock"></i>
+                  <input type="password" id="new-admin-pass" placeholder="At least 8 characters" required minlength="8">
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary" id="btn-create-admin">
+              <i class="fa-solid fa-user-plus"></i> Create Admin Account
+            </button>
+          </form>
+        </div>
+
+        <!-- Change Own Credentials -->
+        <div class="settings-card security-card">
+          <h2><i class="fa-solid fa-shield-halved"></i> Change Your Credentials</h2>
+          <p class="settings-subtext">Change your admin username and password. After saving, you will be logged out and must sign in with your new credentials. The old password will be permanently revoked.</p>
+
+          <div class="security-info-grid">
+            <div class="sec-info-item">
+              <i class="fa-solid fa-lock"></i>
+              <div><strong>Bcrypt Hashed</strong><span>Passwords stored with salt rounds</span></div>
+            </div>
+            <div class="sec-info-item">
+              <i class="fa-solid fa-shield-halved"></i>
+              <div><strong>NoSQL Injection Protected</strong><span>Input sanitization active</span></div>
+            </div>
+            <div class="sec-info-item">
+              <i class="fa-solid fa-gauge-high"></i>
+              <div><strong>Rate Limited</strong><span>15 login attempts / 15 min per IP</span></div>
+            </div>
+            <div class="sec-info-item">
+              <i class="fa-solid fa-helmet-safety"></i>
+              <div><strong>Helmet Headers</strong><span>HTTP security headers enabled</span></div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <form id="credentials-form">
+            <div class="form-group">
+              <label for="cred-current-pass">Current Password *</label>
+              <div class="input-icon-wrap">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" id="cred-current-pass" placeholder="Your current password" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="cred-new-username">New Username *</label>
+                <div class="input-icon-wrap">
+                  <i class="fa-solid fa-user"></i>
+                  <input type="text" id="cred-new-username" placeholder="New admin username" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="cred-new-pass">New Password *</label>
+                <div class="input-icon-wrap">
+                  <i class="fa-solid fa-key"></i>
+                  <input type="password" id="cred-new-pass" placeholder="Min. 8 characters" required>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="cred-confirm-pass">Confirm New Password *</label>
+              <div class="input-icon-wrap">
+                <i class="fa-solid fa-key"></i>
+                <input type="password" id="cred-confirm-pass" placeholder="Re-enter new password" required>
+              </div>
+            </div>
+            <div class="alert-box-inline warning" id="cred-warning" style="display:none">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              <span id="cred-warning-msg">Passwords do not match.</span>
+            </div>
+            <button type="submit" class="btn btn-danger" id="btn-save-creds">
+              <i class="fa-solid fa-key"></i> Update Credentials & Re-login
+            </button>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ========== PRODUCT FORM DRAWER ========== -->
+  <div class="drawer-backdrop" id="product-drawer">
+    <div class="form-drawer">
+      <div class="drawer-header">
+        <h2 id="drawer-form-title">Add New Product</h2>
+        <i class="fa-solid fa-xmark drawer-close-btn" id="product-drawer-close"></i>
+      </div>
+      <div class="drawer-body">
+        <form id="product-form">
+          <input type="hidden" id="product-id">
+          <div class="form-group">
+            <label>Product Name *</label>
+            <input type="text" id="prod-name" placeholder="e.g. Steam Wallet Gift Card $10" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Sale Price (Rs.) *</label>
+              <input type="number" id="prod-price" min="0" placeholder="e.g. 1400" required>
+            </div>
+            <div class="form-group">
+              <label>Original Price (Rs.)</label>
+              <input type="number" id="prod-original-price" min="0" placeholder="Optional">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Category *</label>
+              <select id="prod-category" required>
+                <option value="Gift Cards">Gift Cards</option>
+                <option value="Game Topups">Game Topups</option>
+                <option value="Companion Gadgets">Desk Companions</option>
+                <option value="General">General</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Badge Label</label>
+              <select id="prod-badge">
+                <option value="">None</option>
+                <option value="Hot">HOT</option>
+                <option value="Sale">SALE</option>
+                <option value="New">NEW</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="prod-featured">
+              <span><i class="fa-solid fa-star" style="color:var(--warning-yellow)"></i> Show in Hero Slider</span>
+            </label>
+            <span class="field-hint">Featured products appear in the rotating hero banner on the storefront.</span>
+          </div>
+          <div class="form-group">
+            <label>Description *</label>
+            <textarea id="prod-description" rows="3" required></textarea>
+          </div>
+          <div class="form-group image-input-section">
+            <label>Product Image *</label>
+            <div class="image-toggle-tabs">
+              <button type="button" class="img-toggle-btn active" id="tab-img-file">Upload File</button>
+              <button type="button" class="img-toggle-btn" id="tab-img-url">Image URL</button>
+            </div>
+            <div id="block-img-file">
+              <div class="file-upload-zone">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <p>Click or drag image here</p>
+                <span class="file-spec">JPG, PNG, WEBP, GIF</span>
+                <input type="file" id="prod-image-file" accept="image/*">
+              </div>
+              <div class="file-name-preview" id="file-name-preview">No file selected</div>
+            </div>
+            <div id="block-img-url" style="display:none">
+              <input type="text" id="prod-image-url" placeholder="https://example.com/image.jpg">
+            </div>
+            <input type="hidden" id="prod-image-final">
+            <div class="image-live-preview">
+              <span>Preview:</span>
+              <img id="img-preview-box" src="" alt="Preview">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Product Video (Optional)</label>
+            <input type="text" id="prod-video" placeholder="https://example.com/product-video.mp4">
+            <span class="field-hint">YouTube URL or direct video file link. Shown on the product detail page.</span>
+          </div>
+          <div class="form-group">
+            <label>Gallery Images (Optional, one URL per line)</label>
+            <textarea id="prod-gallery" rows="3" placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"></textarea>
+            <span class="field-hint">Extra product images shown as thumbnails on the detail page.</span>
+          </div>
+          <div class="drawer-actions">
+            <button type="button" class="btn btn-secondary" id="btn-cancel-drawer">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="btn-save-product">
+              <i class="fa-solid fa-check"></i> Save Product
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== INVOICE FORM DRAWER ========== -->
+  <div class="drawer-backdrop" id="invoice-drawer">
+    <div class="form-drawer wide-drawer">
+      <div class="drawer-header">
+        <h2 id="invoice-drawer-title">Create New Invoice</h2>
+        <i class="fa-solid fa-xmark drawer-close-btn" id="invoice-drawer-close"></i>
+      </div>
+      <div class="drawer-body">
+        <form id="invoice-form">
+          <input type="hidden" id="invoice-id">
+          <h3 class="form-section-title"><i class="fa-solid fa-user"></i> Customer Details</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Customer Name *</label>
+              <input type="text" id="inv-customer-name" placeholder="Full name" required>
+            </div>
+            <div class="form-group">
+              <label>Phone Number *</label>
+              <input type="text" id="inv-customer-phone" placeholder="+977..." required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" id="inv-customer-email" placeholder="customer@email.com">
+            </div>
+            <div class="form-group">
+              <label>Delivery Address *</label>
+              <input type="text" id="inv-customer-address" placeholder="Full address" required>
+            </div>
+          </div>
+
+          <h3 class="form-section-title" style="margin-top:20px"><i class="fa-solid fa-cart-shopping"></i> Order Items</h3>
+          <div id="invoice-items-container"></div>
+          <button type="button" class="btn btn-add-item" id="btn-add-item">
+            <i class="fa-solid fa-plus"></i> Add Item
+          </button>
+
+          <div class="invoice-totals-box">
+            <div class="totals-row"><span>Subtotal:</span><span id="inv-subtotal">Rs. 0</span></div>
+            <div class="totals-row discount-row">
+              <label>Discount (Rs.):</label>
+              <input type="number" id="inv-discount" min="0" value="0" class="discount-input">
+            </div>
+            <div class="totals-row grand"><span>Grand Total:</span><span id="inv-grand-total">Rs. 0</span></div>
+          </div>
+
+          <h3 class="form-section-title" style="margin-top:20px"><i class="fa-solid fa-clipboard-list"></i> Order Info</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Payment Method</label>
+              <select id="inv-payment">
+                <option value="Pending">Pending</option>
+                <option value="Cash">Cash</option>
+                <option value="Online">Online</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Order Status</label>
+              <select id="inv-status">
+                <option value="Pending">Pending</option>
+                <option value="In Transit">In Transit</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="drawer-actions">
+            <button type="button" class="btn btn-secondary" id="btn-cancel-invoice">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="btn-save-invoice">
+              <i class="fa-solid fa-file-invoice"></i> Save Invoice
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== INVOICE PRINT PREVIEW MODAL ========== -->
+  <div class="modal-overlay" id="print-modal">
+    <div class="print-modal-card">
+      <div class="print-modal-actions no-print">
+        <button class="btn btn-primary" id="btn-print-invoice">
+          <i class="fa-solid fa-print"></i> Print Invoice
+        </button>
+        <button class="btn btn-secondary" id="close-print-modal">
+          <i class="fa-solid fa-xmark"></i> Close
+        </button>
+      </div>
+      <div id="invoice-print-area">
+        <div class="invoice-header">
+          <div class="invoice-brand">
+            <img src="/images/logo.png" alt="Logo" class="print-logo-img" onerror="this.style.display='none'" style="height:40px;margin-bottom:6px">
+            <h1 class="brand-font"><i class="fa-solid fa-gamepad"></i> SYNDICATE STORE</h1>
+            <p>Kathmandu, Nepal | support@syndicatestore.com</p>
+          </div>
+          <div class="invoice-meta">
+            <h2>INVOICE</h2>
+            <p><strong>Invoice #:</strong> <span id="print-inv-number"></span></p>
+            <p><strong>Date:</strong> <span id="print-inv-date"></span></p>
+          </div>
+        </div>
+        <div class="invoice-customer-section">
+          <div class="invoice-bill-to">
+            <h3>Bill To:</h3>
+            <p id="print-cust-name"></p>
+            <p id="print-cust-phone"></p>
+            <p id="print-cust-email"></p>
+            <p id="print-cust-address"></p>
+          </div>
+          <div class="invoice-status-section">
+            <div class="status-tag" id="print-payment-badge"></div>
+            <div class="status-tag" id="print-status-badge"></div>
+          </div>
+        </div>
+        <table class="invoice-items-table">
+          <thead>
+            <tr>
+              <th>#</th><th>Item</th><th>Unit Price</th><th>Qty</th><th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="print-items-tbody"></tbody>
+        </table>
+        <div class="invoice-totals-print">
+          <div class="totals-print-row"><span>Subtotal:</span><span id="print-subtotal"></span></div>
+          <div class="totals-print-row discount"><span>Discount:</span><span id="print-discount"></span></div>
+          <div class="totals-print-row grand-total"><span>Grand Total:</span><span id="print-grand-total"></span></div>
+        </div>
+        <div class="invoice-footer-print">
+          <p>Thank you for your purchase! For any queries, contact us via WhatsApp or Instagram.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== ORDER EDIT DRAWER ========== -->
+  <div class="drawer-backdrop" id="order-drawer">
+    <div class="form-drawer">
+      <div class="drawer-header">
+        <h2 id="order-drawer-title">Update Order</h2>
+        <i class="fa-solid fa-xmark drawer-close-btn" id="order-drawer-close"></i>
+      </div>
+      <div class="drawer-body">
+        <form id="order-form">
+          <input type="hidden" id="order-id">
+          <div class="order-detail-info" id="order-detail-info">
+            <div class="order-detail-row">
+              <span class="order-detail-label">Customer:</span>
+              <span id="order-detail-customer">-</span>
+            </div>
+            <div class="order-detail-row">
+              <span class="order-detail-label">Email:</span>
+              <span id="order-detail-email">-</span>
+            </div>
+            <div class="order-detail-row">
+              <span class="order-detail-label">Phone:</span>
+              <span id="order-detail-phone">-</span>
+            </div>
+            <div class="order-detail-row">
+              <span class="order-detail-label">Shipping:</span>
+              <span id="order-detail-address">-</span>
+            </div>
+            <div class="order-detail-row">
+              <span class="order-detail-label">Amount:</span>
+              <span id="order-detail-amount">-</span>
+            </div>
+            <div class="order-detail-row">
+              <span class="order-detail-label">Payment:</span>
+              <span id="order-detail-payment">-</span>
+            </div>
+            <div class="order-detail-row">
+              <span class="order-detail-label">Ref ID:</span>
+              <span id="order-detail-refid" style="font-family:monospace;color:var(--primary-neon)">-</span>
+            </div>
+            <div class="order-detail-row">
+              <span class="order-detail-label">Items:</span>
+              <span id="order-detail-items">-</span>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <h3 class="form-section-title"><i class="fa-solid fa-truck"></i> Shipping & Tracking</h3>
+          <div class="form-group">
+            <label>Tracking Number</label>
+            <input type="text" id="order-tracking-number" placeholder="Enter tracking number">
+          </div>
+          <div class="form-group">
+            <label>Shipping Status</label>
+            <select id="order-shipping-status">
+              <option value="yet_to_pack">Yet to Pack</option>
+              <option value="packed">Packed</option>
+              <option value="shipped">Shipped</option>
+              <option value="delivered">Delivered</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Payment Status</label>
+            <select id="order-payment-status">
+              <option value="pending">Pending</option>
+              <option value="paid">Paid</option>
+              <option value="failed">Failed</option>
+              <option value="cash_on_delivery">Cash on Delivery</option>
+            </select>
+          </div>
+          <div class="drawer-actions">
+            <button type="button" class="btn btn-secondary" id="btn-cancel-order">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="btn-save-order">
+              <i class="fa-solid fa-check"></i> Update Order
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

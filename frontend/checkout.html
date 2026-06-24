@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout | SYndicate Store</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/checkout.css">
+</head>
+<body>
+  <div class="glow-bg"></div>
+
+  <header class="navbar-header" id="navbar">
+    <div class="nav-container">
+      <a href="/" class="logo-brand">
+        <i class="fa-solid fa-gamepad logo-icon"></i>
+        <span class="brand-font">SYNDICATE<span class="gradient-text">STORE</span></span>
+      </a>
+      <nav class="nav-links-wrap">
+        <a href="/" class="nav-link"><i class="fa-solid fa-arrow-left"></i> Back to Store</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="checkout-page">
+    <div class="checkout-container">
+      <div class="checkout-loading" id="checkout-loading">
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        <p>Preparing checkout...</p>
+      </div>
+
+      <div class="checkout-error" id="checkout-error" style="display:none">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <h2>Checkout Unavailable</h2>
+        <p id="checkout-error-msg">Your cart is empty. Please add items before checking out.</p>
+        <a href="/" class="btn btn-primary" style="margin-top:15px"><i class="fa-solid fa-arrow-left"></i> Back to Store</a>
+      </div>
+
+      <div class="checkout-layout" id="checkout-layout" style="display:none">
+        <div class="checkout-form-section">
+          <h1 class="checkout-heading"><i class="fa-solid fa-credit-card"></i> Checkout</h1>
+
+          <form id="checkout-form">
+            <h3 class="form-section-title"><i class="fa-solid fa-location-dot"></i> Shipping Details</h3>
+            <div class="checkout-field">
+              <input type="text" id="checkout-name" class="checkout-input" placeholder="Full Name *" required>
+            </div>
+            <div class="checkout-field">
+              <input type="email" id="checkout-email" class="checkout-input" placeholder="Email *" required>
+            </div>
+            <div class="checkout-field">
+              <input type="text" id="checkout-city" class="checkout-input" placeholder="City / Municipality *" required>
+            </div>
+            <div class="checkout-field">
+              <textarea id="checkout-address" class="checkout-input checkout-textarea" placeholder="Full Shipping Address *" required></textarea>
+            </div>
+
+            <h3 class="form-section-title"><i class="fa-solid fa-money-bill"></i> Payment Method</h3>
+            <div class="payment-methods">
+              <label class="payment-method-option" id="pm-scan">
+                <input type="radio" name="paymentMethod" value="Scan" checked>
+                <div class="payment-method-card">
+                  <i class="fa-solid fa-qrcode pm-icon"></i>
+                  <span>Scan to Pay</span>
+                  <small>Pay via QR & send screenshot to Discord</small>
+                </div>
+              </label>
+              <label class="payment-method-option" id="pm-cash">
+                <input type="radio" name="paymentMethod" value="Cash">
+                <div class="payment-method-card">
+                  <i class="fa-solid fa-money-bill-wave pm-icon"></i>
+                  <span>Cash on Delivery</span>
+                  <small>Pay when you receive</small>
+                </div>
+              </label>
+            </div>
+
+            <div id="checkout-scan-fields" style="display:block">
+              <div class="scan-pay-box">
+                <div class="scan-qr-wrap" id="checkout-qr-display">
+                  <img id="checkout-qr-img" src="" alt="Scan to Pay QR">
+                </div>
+                <p class="scan-pay-instruction"><i class="fa-brands fa-discord"></i> After payment, send the screenshot to our <a href="#" id="checkout-discord-link" target="_blank">Discord server</a> for verification.</p>
+              </div>
+            </div>
+            <div id="checkout-cash-fields" style="display:none">
+              <p class="checkout-note"><i class="fa-solid fa-truck"></i> You will pay when your order is delivered. No online payment needed.</p>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-checkout-submit" id="btn-place-order">
+              <i class="fa-solid fa-check"></i> Place Order
+            </button>
+          </form>
+        </div>
+
+        <div class="checkout-summary-section">
+          <h3>Order Summary</h3>
+          <div id="checkout-items-preview"></div>
+          <div class="checkout-total-row">
+            <span>Total Amount:</span>
+            <span class="checkout-total-amount" id="checkout-total-amount">Rs. 0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="payment-toast" id="payment-toast" style="display:none">
+    <div class="payment-toast-content">
+      <i class="fa-solid" id="payment-toast-icon"></i>
+      <div>
+        <h4 id="payment-toast-title"></h4>
+        <p id="payment-toast-msg"></p>
+      </div>
+      <i class="fa-solid fa-xmark payment-toast-close" id="payment-toast-close"></i>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+  <script src="/js/checkout.js"></script>
+</body>
+</html>

@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Welcome to the ultimate gaming store and workspace gadgets portal. Explore gift cards, game topups, premium desktop companion bots, and accessories.">
+  <meta name="keywords" content="gaming accessories, companion robots, gift cards, game topups, chotubot, game zone">
+  <meta name="author" content="Syndicate Store">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="SYndicate Store">
+  <meta property="og:description" content="Shop premium gift cards, workspace companion bots, and gaming top-ups. Instant contact to buy.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/images/og-banner.jpg">
+
+  <title>SYndicate Store</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+  <!-- Background Glow FX -->
+  <div class="glow-bg"></div>
+
+  <!-- Header / Navigation -->
+  <header class="navbar-header" id="navbar">
+    <div class="nav-container">
+      <a href="/" class="logo-brand">
+        <img id="nav-logo-img" class="nav-logo-img" src="/images/logo.png" alt="Logo" onload="this.style.display='inline'" onerror="this.style.display='none';document.getElementById('nav-logo-fallback').style.display='inline-block'">
+        <i id="nav-logo-fallback" class="fa-solid fa-gamepad logo-icon" style="display:none"></i>
+        <span class="brand-font">SYNDICATE<span class="gradient-text">STORE</span></span>
+      </a>
+      
+      <div class="nav-search-bar">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="store-search-input" placeholder="Search gaming cards, bots, items...">
+      </div>
+
+      <nav class="nav-links-wrap">
+        <a href="#products-section" class="nav-link active">Shop</a>
+        <a href="#about-section" class="nav-link">About</a>
+        <a href="#faq-section" class="nav-link">FAQ</a>
+      </nav>
+
+      <div class="user-account-wrap" id="user-account-wrap">
+        <div id="google-button-container" class="google-btn-container"></div>
+        <div class="cart-icon-wrap" id="cart-icon-wrap" style="display:none">
+          <i class="fa-solid fa-cart-shopping cart-icon-nav" id="cart-icon-nav"></i>
+          <span class="cart-count-badge" id="cart-count-badge">0</span>
+        </div>
+        <div class="user-profile-btn" id="user-profile-btn" style="display:none">
+          <div class="user-profile-trigger" id="user-profile-trigger">
+            <img id="user-avatar-img" class="user-avatar-img" src="" alt="User">
+            <span id="user-name-display" class="user-name-display"></span>
+            <i class="fa-solid fa-chevron-down user-chevron"></i>
+          </div>
+          <div class="user-dropdown-menu" id="user-dropdown-menu">
+            <div class="dropdown-user-info">
+              <p class="dropdown-user-name" id="dropdown-user-name"></p>
+              <p class="dropdown-user-email" id="dropdown-user-email"></p>
+            </div>
+            <div class="dropdown-divider"></div>
+            <button id="cart-button" class="dropdown-action-btn">
+              <i class="fa-solid fa-cart-shopping"></i> My Cart
+            </button>
+            <button id="orders-button" class="dropdown-action-btn">
+              <i class="fa-solid fa-receipt"></i> My Orders
+            </button>
+            <a href="/profile.html" class="dropdown-action-btn profile-link-btn">
+              <i class="fa-solid fa-user"></i> My Profile
+            </a>
+            <a href="/chat" class="dropdown-action-btn profile-link-btn">
+              <i class="fa-solid fa-comment-dots"></i> Live Chat
+            </a>
+            <button id="logout-button" class="logout-button">
+              <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="mobile-nav-toggle" id="mobile-menu-toggle">
+        <i class="fa-solid fa-bars"></i>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu Drawer -->
+  <div class="mobile-menu-drawer" id="mobile-drawer">
+    <div class="drawer-header">
+      <span class="logo-brand">
+        <img class="nav-logo-img" src="/images/logo.png" alt="Logo" onload="this.style.display='inline'" onerror="this.style.display='none';document.getElementById('drawer-logo-fallback').style.display='inline-block'">
+        <i id="drawer-logo-fallback" class="fa-solid fa-gamepad logo-icon" style="display:none"></i>
+        <span class="brand-font">SYNDICATE<span class="gradient-text">STORE</span></span>
+      </span>
+      <i class="fa-solid fa-xmark drawer-close" id="drawer-close-btn"></i>
+    </div>
+    <div class="drawer-search">
+      <input type="text" id="mobile-search-input" placeholder="Search products...">
+    </div>
+    <div class="drawer-links">
+      <div class="drawer-user-section" id="drawer-user-section">
+        <div id="google-button-mobile-container" class="google-btn-container mobile-google-btn"></div>
+        <div class="drawer-user-info" id="drawer-user-info" style="display:none">
+          <img id="drawer-user-avatar" class="drawer-user-avatar" src="" alt="">
+          <div>
+            <p id="drawer-user-name" class="drawer-user-name"></p>
+            <p id="drawer-user-email" class="drawer-user-email"></p>
+          </div>
+        </div>
+        <a href="/profile.html" class="drawer-link drawer-profile-link" style="display:none" id="drawer-profile-link">
+          <i class="fa-solid fa-user"></i> My Profile
+        </a>
+        <a href="/chat" class="drawer-link drawer-profile-link" style="display:none" id="drawer-chat-link">
+          <i class="fa-solid fa-comment-dots"></i> Live Chat
+        </a>
+        <button class="drawer-logout-btn" id="drawer-logout-btn" style="display:none">
+          <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+        </button>
+      </div>
+      <a href="#products-section" class="drawer-link">Shop</a>
+      <a href="#about-section" class="drawer-link">About</a>
+      <a href="#faq-section" class="drawer-link">FAQ</a>
+    </div>
+  </div>
+
+  <!-- Immersive Hero Section -->
+  <section class="hero-section">
+    <div class="hero-glow-overlay"></div>
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="hero-tagline">
+          <span class="pulse-dot"></span> Premium Gaming & Gadgets
+        </div>
+        <h1 class="hero-title">Elevate Your <span class="highlight-cyan">Workspace</span> & <span class="highlight-neon">Gaming</span> Experience</h1>
+        <p class="hero-subtitle">Replicating premium gadget companion experiences. Get instant game topups, steam gift cards, and smart companion robots. Browse, decide, and click to buy instantly via WhatsApp, Instagram, or direct call.</p>
+        <div class="hero-cta-group">
+          <a href="#products-section" class="btn btn-primary btn-glow">
+            <i class="fa-solid fa-shop"></i> Explore Shop
+          </a>
+          <a href="#about-section" class="btn btn-secondary">
+            Learn More <i class="fa-solid fa-arrow-down"></i>
+          </a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-slider-container" id="hero-slider">
+          <div class="slider-track" id="slider-track">
+            <!-- Slides rendered dynamically by app.js -->
+          </div>
+          <!-- Glow effects -->
+          <div class="slider-glow-left"></div>
+          <div class="slider-glow-right"></div>
+          <!-- Navigation dots -->
+          <div class="slider-dots" id="slider-dots"></div>
+          <!-- Loading state -->
+          <div class="slider-loader" id="slider-loader">
+            <div class="slider-loader-spinner"></div>
+          </div>
+          <!-- Empty state (no featured products) -->
+          <div class="slider-empty" id="slider-empty" style="display:none">
+            <div class="slider-empty-content">
+              <i class="fa-solid fa-cube"></i>
+              <h3>Featured Products</h3>
+              <p>Admin can showcase products here</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section class="features-bar-section">
+    <div class="features-container">
+      <div class="feature-item">
+        <div class="feature-icon"><i class="fa-brands fa-whatsapp"></i></div>
+        <div class="feature-text">
+          <h3>Instant Chat Support</h3>
+          <p>Contact and finalize purchases directly on WhatsApp.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+        <div class="feature-text">
+          <h3>Fast Delivery</h3>
+          <p>Get your digital gift cards & credits delivered in minutes.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <div class="feature-text">
+          <h3>Direct Deals</h3>
+          <p>No client accounts required. Secure personal verification.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Store / Product Section -->
+  <section class="products-section" id="products-section">
+    <div class="section-container">
+      <div class="section-header-wrap">
+        <div class="title-area">
+          <span class="section-badge">CATALOGUE</span>
+          <h2 class="section-title">Featured Products & Gadgets</h2>
+        </div>
+        <div class="categories-filter-container" id="category-filters-list">
+          <button class="filter-btn active" data-category="all">All Items</button>
+          <button class="filter-btn" data-category="Gift Cards">Gift Cards</button>
+          <button class="filter-btn" data-category="Game Topups">Game Topups</button>
+          <button class="filter-btn" data-category="Companion Gadgets">Desk Companions</button>
+          <button class="filter-btn" data-category="General">General</button>
+        </div>
+      </div>
+
+      <!-- Search & Status alerts on mobile -->
+      <div class="search-mobile-feedback" id="search-feedback-text"></div>
+
+      <!-- Products Grid -->
+      <div class="products-grid-container" id="products-grid">
+        <!-- Skeletons render here dynamically before loading -->
+        <div class="skeleton-card">
+          <div class="skeleton-img"></div>
+          <div class="skeleton-title"></div>
+          <div class="skeleton-price"></div>
+          <div class="skeleton-btn"></div>
+        </div>
+        <div class="skeleton-card">
+          <div class="skeleton-img"></div>
+          <div class="skeleton-title"></div>
+          <div class="skeleton-price"></div>
+          <div class="skeleton-btn"></div>
+        </div>
+        <div class="skeleton-card">
+          <div class="skeleton-img"></div>
+          <div class="skeleton-title"></div>
+          <div class="skeleton-price"></div>
+          <div class="skeleton-btn"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Us Section -->
+  <section class="about-section" id="about-section">
+    <div class="about-container">
+      <div class="about-content">
+        <span class="section-badge">WHO WE ARE</span>
+        <h2 class="about-title">Why Shop with SYndicate Store?</h2>
+        <p class="about-description">
+          SYndicate Store brings together the premium gaming delivery mechanics of Hamro Gaming Store and the custom tech desk-companion aesthetics of ChotuBot. We cut down the complex signup registration flows so you can purchase products via simple social chats. 
+        </p>
+        <div class="about-checklist">
+          <div class="check-item">
+            <i class="fa-solid fa-square-check text-neon"></i>
+            <span>No email verifications or passwords required.</span>
+          </div>
+          <div class="check-item">
+            <i class="fa-solid fa-square-check text-neon"></i>
+            <span>Multiple support options: WhatsApp, Instagram DM, direct mobile number.</span>
+          </div>
+          <div class="check-item">
+            <i class="fa-solid fa-square-check text-neon"></i>
+            <span>Curated tech products, gaming codes and hardware tested by engineers.</span>
+          </div>
+        </div>
+      </div>
+      <div class="about-visual">
+        <div class="glow-box-about">
+          <i class="fa-solid fa-rocket-launch"></i>
+          <h3>Fast, Frictionless & Simple</h3>
+          <p>Simply pick your item, click 'Contact to Buy' and get connected to our support representative instantly.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="faq-section" id="faq-section">
+    <div class="faq-container">
+      <div class="section-header-wrap center">
+        <span class="section-badge">SUPPORT</span>
+        <h2 class="section-title">Frequently Asked Questions</h2>
+      </div>
+      
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>How do I buy a product?</h3>
+            <i class="fa-solid fa-plus faq-toggle-icon"></i>
+          </div>
+          <div class="faq-answer">
+            <p>Simply click on the "Contact to Buy" button on any product card. A modal will pop up with direct buttons to reach us via WhatsApp, phone call, or Instagram. Once you select a channel, a pre-filled text with the product name and price will be generated to start our conversation.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>Do I need to sign up or create an account?</h3>
+            <i class="fa-solid fa-plus faq-toggle-icon"></i>
+          </div>
+          <div class="faq-answer">
+            <p>No! There is absolutely no account registration required for buyers. This keeps your data private, safe, and saves you from remembering passwords.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>What payment methods are supported?</h3>
+            <i class="fa-solid fa-plus faq-toggle-icon"></i>
+          </div>
+          <div class="faq-answer">
+            <p>We support various local payment gateways, bank transfers, mobile wallets, and QR payments. When you contact us to buy, our support team will provide you with the most convenient payment options for your region.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dynamic Product Detail & Contact Purchase Modal -->
+  <div class="modal-backdrop" id="purchase-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="modal-product-name">Product Name</h2>
+        <i class="fa-solid fa-xmark modal-close-btn" id="modal-close-btn"></i>
+      </div>
+      <div class="modal-body">
+        <div class="modal-product-info">
+          <img id="modal-product-img" src="" alt="Product Image">
+          <div class="modal-product-details">
+            <span class="modal-category" id="modal-product-category">Category</span>
+            <p class="modal-description" id="modal-product-desc">Product description goes here.</p>
+            <div class="modal-price-row">
+              <span class="modal-price" id="modal-product-price">Rs. 000</span>
+              <span class="modal-original-price" id="modal-product-original-price">Rs. 000</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="contact-purchase-options">
+          <h3>Purchase Options</h3>
+          <p class="contact-subtext">Add to cart for later or buy now.</p>
+          
+          <div class="purchase-buttons-grid">
+            <button class="contact-btn cart-btn" id="btn-add-to-cart">
+              <i class="fa-solid fa-cart-plus"></i>
+              <span>Add to Cart</span>
+            </button>
+            <button class="contact-btn buy-btn" id="btn-buy-now">
+              <i class="fa-solid fa-bolt"></i>
+              <span>Buy Now</span>
+            </button>
+          </div>
+          
+          <div class="payment-divider">
+            <span>OR Contact via</span>
+          </div>
+          
+          <div class="contact-buttons-grid">
+            <a href="#" target="_blank" class="contact-btn whatsapp-btn" id="contact-whatsapp">
+              <i class="fa-brands fa-whatsapp"></i>
+              <span>WhatsApp Chat</span>
+            </a>
+            <a href="#" target="_blank" class="contact-btn instagram-btn" id="contact-instagram">
+              <i class="fa-brands fa-instagram"></i>
+              <span>Instagram DM</span>
+            </a>
+            <a href="#" target="_blank" class="contact-btn discord-btn" id="contact-discord">
+              <i class="fa-brands fa-discord"></i>
+              <span>Discord</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sign-In Prompt Popup -->
+  <div class="modal-backdrop" id="signin-prompt-modal">
+    <div class="modal-card signin-prompt-card">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-user-lock"></i> Sign In Required</h2>
+        <i class="fa-solid fa-xmark modal-close-btn" id="signin-prompt-close"></i>
+      </div>
+      <div class="modal-body signin-prompt-body">
+        <div class="signin-prompt-content">
+          <i class="fa-solid fa-cart-plus signin-prompt-icon"></i>
+          <h3>Please sign in to continue</h3>
+          <p>Sign in with your Google account to add items to your cart or make a purchase.</p>
+          <div id="signin-prompt-google-btn" class="google-btn-container-centered"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart Modal -->
+  <div class="modal-backdrop" id="cart-modal">
+    <div class="modal-card cart-modal-card">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-cart-shopping"></i> My Cart</h2>
+        <i class="fa-solid fa-xmark modal-close-btn" id="cart-modal-close"></i>
+      </div>
+      <div class="modal-body">
+        <div id="cart-loading" class="orders-loading"><i class="fa-solid fa-spinner fa-spin"></i> Loading cart...</div>
+        <div id="cart-empty" class="orders-empty" style="display:none">
+          <i class="fa-solid fa-cart-plus"></i>
+          <p>Your cart is empty.</p>
+        </div>
+        <div id="cart-items-list" style="display:none"></div>
+        <div class="cart-summary" id="cart-summary" style="display:none">
+          <div class="cart-total-row">
+            <span>Total:</span>
+            <span class="cart-total-amount" id="cart-total-amount">Rs. 0</span>
+          </div>
+          <button class="btn btn-primary btn-checkout" id="btn-proceed-checkout">
+            <i class="fa-solid fa-credit-card"></i> Proceed to Checkout
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div class="modal-backdrop" id="checkout-modal">
+    <div class="modal-card checkout-modal-card">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-credit-card"></i> Checkout</h2>
+        <i class="fa-solid fa-xmark modal-close-btn" id="checkout-modal-close"></i>
+      </div>
+      <div class="modal-body">
+        <form id="checkout-form">
+          <h3 class="form-section-title-checkout"><i class="fa-solid fa-location-dot"></i> Shipping Details</h3>
+          <div class="checkout-form-row">
+            <input type="text" id="checkout-name" class="checkout-input" placeholder="Full Name *" required>
+          </div>
+          <div class="checkout-form-row">
+            <input type="email" id="checkout-email" class="checkout-input" placeholder="Email *" required>
+          </div>
+          <div class="checkout-form-row">
+            <input type="text" id="checkout-city" class="checkout-input" placeholder="City / Municipality *" required>
+          </div>
+          <div class="checkout-form-row">
+            <textarea id="checkout-address" class="checkout-input checkout-textarea" placeholder="Full Shipping Address *" required></textarea>
+          </div>
+
+          <h3 class="form-section-title-checkout"><i class="fa-solid fa-money-bill"></i> Payment Method</h3>
+          <div class="payment-methods">
+            <label class="payment-method-option" id="pm-scan">
+              <input type="radio" name="paymentMethod" value="Scan" checked>
+              <div class="payment-method-card">
+                <i class="fa-solid fa-qrcode pm-icon"></i>
+                <span>Scan to Pay</span>
+                <small>Pay via QR & send screenshot to Discord</small>
+              </div>
+            </label>
+            <label class="payment-method-option" id="pm-cash">
+              <input type="radio" name="paymentMethod" value="Cash">
+              <div class="payment-method-card">
+                <i class="fa-solid fa-money-bill-wave pm-icon"></i>
+                <span>Cash on Delivery</span>
+                <small>Pay when you receive</small>
+              </div>
+            </label>
+          </div>
+
+          <div class="checkout-summary" id="checkout-summary">
+            <h4>Order Summary</h4>
+            <div id="checkout-items-preview"></div>
+            <div class="checkout-total-row">
+              <span>Total Amount:</span>
+              <span class="checkout-total-amount" id="checkout-total-amount">Rs. 0</span>
+            </div>
+          </div>
+
+          <div id="checkout-scan-fields" style="display:block">
+            <div class="scan-pay-box">
+              <div class="scan-qr-wrap" id="checkout-qr-display">
+                <img id="checkout-qr-img" src="" alt="Scan to Pay QR">
+              </div>
+              <p class="scan-pay-instruction"><i class="fa-brands fa-discord"></i> After payment, send the screenshot to our <a href="#" id="checkout-discord-link" target="_blank">Discord server</a> for verification.</p>
+            </div>
+          </div>
+          <div id="checkout-cash-fields" style="display:none">
+            <p class="checkout-note"><i class="fa-solid fa-truck"></i> You will pay when your order is delivered. No online payment needed.</p>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-checkout-submit" id="btn-place-order">
+            <i class="fa-solid fa-check"></i> Place Order
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Status Toast -->
+  <div class="payment-toast" id="payment-toast" style="display:none">
+    <div class="payment-toast-content">
+      <i class="fa-solid" id="payment-toast-icon"></i>
+      <div>
+        <h4 id="payment-toast-title"></h4>
+        <p id="payment-toast-msg"></p>
+      </div>
+      <i class="fa-solid fa-xmark payment-toast-close" id="payment-toast-close"></i>
+    </div>
+  </div>
+
+  <!-- My Orders Modal -->
+  <div class="modal-backdrop" id="orders-modal">
+    <div class="modal-card orders-modal-card">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-receipt"></i> My Orders</h2>
+        <i class="fa-solid fa-xmark modal-close-btn" id="orders-modal-close"></i>
+      </div>
+      <div class="modal-body">
+        <div id="orders-loading" class="orders-loading"><i class="fa-solid fa-spinner fa-spin"></i> Loading orders...</div>
+        <div id="orders-empty" class="orders-empty" style="display:none">
+          <i class="fa-solid fa-box-open"></i>
+          <p>No orders yet.</p>
+        </div>
+        <div id="orders-list" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer-wrap">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <a href="/" class="logo-brand">
+          <img class="nav-logo-img" src="/images/logo.png" alt="Logo" onload="this.style.display='inline'" onerror="this.style.display='none';document.getElementById('footer-logo-fallback').style.display='inline-block'">
+          <i id="footer-logo-fallback" class="fa-solid fa-gamepad logo-icon" style="display:none"></i>
+          <span class="brand-font">SYNDICATE<span class="gradient-text">STORE</span></span>
+        </a>
+        <p>Your one-stop gaming store and workplace desk companion bot marketplace. Simple click-to-buy interactions via social media.</p>
+        <div class="footer-social-links" id="footer-socials-row">
+          <a href="#" target="_blank" id="footer-link-whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="#" target="_blank" id="footer-link-instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" target="_blank" id="footer-link-discord"><i class="fa-brands fa-discord"></i></a>
+        </div>
+      </div>
+      
+      <div class="footer-links-group">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="#products-section">All Products</a></li>
+          <li><a href="#about-section">About Store</a></li>
+          <li><a href="#faq-section">Read FAQs</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-contact-info">
+        <h3>Store Support</h3>
+        <p><i class="fa-solid fa-envelope"></i> support@syndicatestore.com</p>
+        <p><i class="fa-solid fa-location-dot"></i> Kathmandu, Nepal</p>
+        <p class="note-text"><i class="fa-solid fa-clock"></i> Response Time: ~5-15 Minutes</p>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; 2026 SYndicate Store. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Chat Widget -->
+  <div class="chat-widget" id="chat-widget">
+    <a href="/chat" class="chat-bubble" id="chat-bubble" title="Chat with us">
+      <i class="fa-solid fa-comment-dots"></i>
+    </a>
+  </div>
+
+  <!-- Custom Scripts -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

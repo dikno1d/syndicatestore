@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login | SYndicate Store</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root {
+      --bg-deep: #050005;
+      --bg-card: rgba(30, 5, 40, 0.85);
+      --primary-neon: #a855f7;
+      --secondary-neon: #c026d3;
+      --price-green: #22d3ee;
+      --text-white: #ffffff;
+      --text-gray: #a88bc9;
+      --font-body: 'Outfit', sans-serif;
+      --font-display: 'Space Grotesk', sans-serif;
+      --border-color: rgba(255,255,255,0.08);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background-color: var(--bg-deep);
+      color: var(--text-white);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(0,240,255,0.06) 0%, transparent 70%);
+      top: -15%; left: -15%;
+      pointer-events: none;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(255,0,85,0.05) 0%, transparent 70%);
+      bottom: -15%; right: -15%;
+      pointer-events: none;
+    }
+    .login-wrap {
+      width: 90%; max-width: 440px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 45px 35px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      backdrop-filter: blur(12px);
+      position: relative; z-index: 10;
+      animation: slideUp 0.4s ease-out;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .login-wrap:hover { border-color: rgba(0,240,255,0.2); }
+    .brand {
+      font-family: 'Orbitron', var(--font-display);
+      font-weight: 800;
+      font-size: 1.9rem;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .brand .icon { color: var(--primary-neon); filter: drop-shadow(0 0 10px rgba(0,240,255,0.5)); }
+    .gradient-text {
+      background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtitle { color: var(--text-gray); font-size: 0.9rem; text-align: center; margin-bottom: 35px; }
+    .security-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(57,255,20,0.08); border: 1px solid rgba(57,255,20,0.2);
+      color: var(--price-green); padding: 5px 14px; border-radius: 20px;
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; margin: 0 auto 25px; display: flex; justify-content: center;
+    }
+    .form-group { margin-bottom: 20px; }
+    label {
+      display: block; font-size: 0.78rem; font-weight: 700;
+      color: var(--text-gray); text-transform: uppercase;
+      letter-spacing: 0.5px; margin-bottom: 8px;
+    }
+    .input-wrap { position: relative; display: flex; align-items: center; }
+    .input-wrap .icon-left { position: absolute; left: 14px; color: var(--text-gray); font-size: 0.9rem; z-index: 1; }
+    .input-wrap input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border-color);
+      padding: 13px 14px 13px 42px;
+      border-radius: 10px; color: var(--text-white);
+      font-size: 0.95rem; font-family: var(--font-body);
+      outline: none; transition: all 0.3s ease;
+    }
+    .input-wrap input:focus {
+      border-color: var(--primary-neon);
+      box-shadow: 0 0 12px rgba(0,240,255,0.12);
+      background: rgba(255,255,255,0.06);
+    }
+    .toggle-pass { position: absolute; right: 14px; color: var(--text-gray); cursor: pointer; transition: 0.2s; }
+    .toggle-pass:hover { color: var(--primary-neon); }
+    .btn-login {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon));
+      color: #050b18; border: none; padding: 14px;
+      border-radius: 10px; font-weight: 800;
+      font-size: 1rem; cursor: pointer;
+      display: flex; justify-content: center; align-items: center; gap: 10px;
+      transition: all 0.3s ease; margin-top: 5px;
+      font-family: var(--font-body);
+    }
+    .btn-login:hover { box-shadow: 0 0 20px rgba(0,240,255,0.4); transform: translateY(-1px); }
+    .btn-login:disabled { opacity: 0.65; transform: none; cursor: not-allowed; }
+    .alert-box {
+      background: rgba(255,0,85,0.1); border: 1px solid rgba(255,0,85,0.3);
+      color: #ff6688; padding: 11px 15px; border-radius: 8px;
+      margin-bottom: 18px; font-size: 0.88rem;
+      display: none; align-items: center; gap: 8px;
+    }
+    .back-link { display: block; text-align: center; margin-top: 25px; color: var(--text-gray); font-size: 0.85rem; text-decoration: none; transition: 0.2s; }
+    .back-link:hover { color: var(--primary-neon); }
+    .divider { height: 1px; background: var(--border-color); margin: 20px 0; }
+  </style>
+</head>
+<body>
+  <div class="login-wrap">
+    <div class="brand">
+      <i class="fa-solid fa-user-shield icon"></i>
+    </div>
+    <p class="subtitle">Secure Access Portal</p>
+    <div class="security-badge"><i class="fa-solid fa-lock"></i> Protected by End-to-End Encryption</div>
+
+    <div class="alert-box" id="error-box">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <span id="error-msg">Invalid credentials.</span>
+    </div>
+
+    <form id="login-form" autocomplete="off">
+      <div class="form-group">
+        <label for="admin-username">Username</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-user icon-left"></i>
+          <input type="text" id="admin-username" placeholder="Enter admin username" required autocomplete="off" spellcheck="false">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="admin-password">Password</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-lock icon-left"></i>
+          <input type="password" id="admin-password" placeholder="Enter admin password" required autocomplete="new-password">
+          <i class="fa-solid fa-eye toggle-pass" id="toggle-pw"></i>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <button type="submit" class="btn-login" id="submit-btn">
+        <i class="fa-solid fa-right-to-bracket"></i> Authenticate & Enter
+      </button>
+    </form>
+    <a href="/" class="back-link"><i class="fa-solid fa-arrow-left-long"></i> Return to Storefront</a>
+  </div>
+
+  <script src="/js/admin-login.js"></script>
+</body>
+</html>

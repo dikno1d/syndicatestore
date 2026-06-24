@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details | SYndicate Store</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/product.css">
+</head>
+<body>
+  <div class="glow-bg"></div>
+
+  <!-- Navbar -->
+  <header class="navbar-header" id="navbar">
+    <div class="nav-container">
+      <a href="/" class="logo-brand">
+        <i class="fa-solid fa-gamepad logo-icon"></i>
+        <span class="brand-font">SYNDICATE<span class="gradient-text">STORE</span></span>
+      </a>
+      <nav class="nav-links-wrap">
+        <a href="/" class="nav-link"><i class="fa-solid fa-arrow-left"></i> Back to Store</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Product Detail -->
+  <section class="product-detail-section" id="product-detail">
+    <div class="product-detail-container">
+      <div class="product-detail-loading" id="product-loading">
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        <p>Loading product...</p>
+      </div>
+      <div class="product-detail-error" id="product-error" style="display:none">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <h2>Product Not Found</h2>
+        <p>The product you're looking for doesn't exist.</p>
+        <a href="/" class="btn btn-primary" style="margin-top:15px"><i class="fa-solid fa-arrow-left"></i> Back to Store</a>
+      </div>
+      <div class="product-detail-content" id="product-content" style="display:none">
+        <div class="product-detail-gallery">
+          <div class="product-detail-main-img">
+            <img id="detail-image" src="" alt="Product Image">
+          </div>
+          <div class="product-detail-gallery-wrap" id="detail-gallery-wrap" style="display:none">
+            <div class="gallery-thumbs" id="detail-gallery-thumbs"></div>
+          </div>
+          <div class="product-detail-video-wrap" id="detail-video-wrap" style="display:none">
+            <video id="detail-video" controls style="display:none">
+              <source id="detail-video-source" src="" type="video/mp4">
+            </video>
+            <div class="product-detail-video-embed" id="detail-video-embed" style="display:none">
+              <iframe id="detail-video-iframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+        <div class="product-detail-info">
+          <span class="product-detail-category" id="detail-category"></span>
+          <h1 class="product-detail-title" id="detail-title"></h1>
+          <div class="product-detail-price-row">
+            <span class="product-detail-price" id="detail-price"></span>
+            <span class="product-detail-original-price" id="detail-original-price"></span>
+          </div>
+          <div class="product-detail-badge-wrap" id="detail-badge-wrap" style="display:none">
+            <span class="product-detail-badge" id="detail-badge"></span>
+          </div>
+          <h3>Description</h3>
+          <p class="product-detail-desc" id="detail-desc"></p>
+
+          <div class="product-detail-purchase">
+            <h3>Purchase Options</h3>
+            <div class="purchase-buttons-grid">
+              <button class="contact-btn cart-btn" id="detail-add-cart">
+                <i class="fa-solid fa-cart-plus"></i>
+                <span>Add to Cart</span>
+              </button>
+              <button class="contact-btn buy-btn" id="detail-buy-now">
+                <i class="fa-solid fa-bolt"></i>
+                <span>Buy Now</span>
+              </button>
+            </div>
+            <div class="payment-divider"><span>OR Contact via</span></div>
+            <div class="contact-buttons-grid">
+              <a href="#" target="_blank" class="contact-btn whatsapp-btn" id="detail-whatsapp">
+                <i class="fa-brands fa-whatsapp"></i><span>WhatsApp Chat</span>
+              </a>
+              <a href="#" target="_blank" class="contact-btn instagram-btn" id="detail-instagram">
+                <i class="fa-brands fa-instagram"></i><span>Instagram DM</span>
+              </a>
+              <a href="#" target="_blank" class="contact-btn discord-btn" id="detail-discord">
+                <i class="fa-brands fa-discord"></i><span>Discord</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Payment Toast -->
+  <div class="payment-toast" id="payment-toast" style="display:none">
+    <div class="payment-toast-content">
+      <i class="fa-solid" id="payment-toast-icon"></i>
+      <div>
+        <h4 id="payment-toast-title"></h4>
+        <p id="payment-toast-msg"></p>
+      </div>
+      <i class="fa-solid fa-xmark payment-toast-close" id="payment-toast-close"></i>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+  <script src="/js/product.js"></script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Your profile and orders on SYndicate Store.">
+  <title>My Profile | SYndicate Store</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="glow-bg"></div>
+
+  <!-- Navbar -->
+  <header class="navbar-header" id="navbar">
+    <div class="nav-container">
+      <a href="/" class="logo-brand">
+        <i class="fa-solid fa-gamepad logo-icon"></i>
+        <span class="brand-font">SYNDICATE<span class="gradient-text">STORE</span></span>
+      </a>
+      <nav class="nav-links-wrap">
+        <a href="/" class="nav-link"><i class="fa-solid fa-arrow-left"></i> Back to Store</a>
+      </nav>
+      <div class="user-account-wrap" id="user-account-wrap">
+        <div class="cart-icon-wrap" id="cart-icon-wrap" style="display:none">
+          <i class="fa-solid fa-cart-shopping cart-icon-nav" id="cart-icon-nav"></i>
+          <span class="cart-count-badge" id="cart-count-badge">0</span>
+        </div>
+        <div class="user-profile-btn" id="user-profile-btn" style="display:none">
+          <div class="user-profile-trigger" id="user-profile-trigger">
+            <img id="user-avatar-img" class="user-avatar-img" src="" alt="User">
+            <span id="user-name-display" class="user-name-display"></span>
+            <i class="fa-solid fa-chevron-down user-chevron"></i>
+          </div>
+          <div class="user-dropdown-menu" id="user-dropdown-menu">
+            <div class="dropdown-user-info">
+              <p class="dropdown-user-name" id="dropdown-user-name"></p>
+              <p class="dropdown-user-email" id="dropdown-user-email"></p>
+            </div>
+            <div class="dropdown-divider"></div>
+            <button id="orders-button" class="dropdown-action-btn">
+              <i class="fa-solid fa-receipt"></i> My Orders
+            </button>
+            <button id="logout-button" class="logout-button">
+              <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Profile Content -->
+  <main class="profile-page">
+    <div class="profile-container">
+      <!-- Profile Header Card -->
+      <div class="profile-header-card">
+        <div class="profile-avatar-wrap">
+          <img id="profile-avatar" class="profile-avatar" src="" alt="Profile">
+        </div>
+        <div class="profile-info">
+          <h1 id="profile-name" class="profile-name">Loading...</h1>
+          <p id="profile-email" class="profile-email"></p>
+          <p id="profile-joined" class="profile-joined"></p>
+        </div>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="profile-stats-row">
+        <div class="profile-stat-card">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span class="profile-stat-value" id="profile-cart-count">0</span>
+          <span class="profile-stat-label">Cart Items</span>
+        </div>
+        <div class="profile-stat-card">
+          <i class="fa-solid fa-receipt"></i>
+          <span class="profile-stat-value" id="profile-order-count">0</span>
+          <span class="profile-stat-label">Orders</span>
+        </div>
+        <div class="profile-stat-card">
+          <i class="fa-solid fa-indian-rupee-sign"></i>
+          <span class="profile-stat-value" id="profile-total-spent">Rs. 0</span>
+          <span class="profile-stat-label">Total Spent</span>
+        </div>
+      </div>
+
+      <!-- Orders Section -->
+      <div class="profile-section">
+        <div class="profile-section-header">
+          <h2><i class="fa-solid fa-receipt"></i> My Orders</h2>
+          <div class="profile-order-filters">
+            <button class="profile-filter-btn active" data-filter="all">All</button>
+            <button class="profile-filter-btn" data-filter="pending">Pending</button>
+            <button class="profile-filter-btn" data-filter="paid">Paid</button>
+            <button class="profile-filter-btn" data-filter="shipped">Shipped</button>
+            <button class="profile-filter-btn" data-filter="delivered">Delivered</button>
+          </div>
+        </div>
+        <div id="profile-orders-container">
+          <div class="profile-loading" id="profile-orders-loading">
+            <i class="fa-solid fa-spinner fa-spin"></i> Loading orders...
+          </div>
+          <div class="profile-empty" id="profile-orders-empty" style="display:none">
+            <i class="fa-solid fa-box-open"></i>
+            <p>No orders yet.</p>
+          </div>
+          <div class="profile-orders-list" id="profile-orders-list" style="display:none"></div>
+        </div>
+      </div>
+
+      <!-- Cart Section -->
+      <div class="profile-section">
+        <div class="profile-section-header">
+          <h2><i class="fa-solid fa-cart-shopping"></i> My Cart</h2>
+          <a href="/" class="btn btn-sm btn-primary"><i class="fa-solid fa-plus"></i> Continue Shopping</a>
+        </div>
+        <div id="profile-cart-container">
+          <div class="profile-loading" id="profile-cart-loading">
+            <i class="fa-solid fa-spinner fa-spin"></i> Loading cart...
+          </div>
+          <div class="profile-empty" id="profile-cart-empty" style="display:none">
+            <i class="fa-solid fa-cart-plus"></i>
+            <p>Your cart is empty.</p>
+          </div>
+          <div class="profile-cart-list" id="profile-cart-list" style="display:none"></div>
+          <div class="profile-cart-summary" id="profile-cart-summary" style="display:none">
+            <div class="profile-cart-total">
+              <span>Total:</span>
+              <span class="profile-cart-total-amount" id="profile-cart-total">Rs. 0</span>
+            </div>
+            <button class="btn btn-primary" id="profile-checkout-btn"><i class="fa-solid fa-credit-card"></i> Proceed to Checkout</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Section -->
+      <div class="profile-section" id="profile-chat-section">
+        <div class="profile-section-header">
+          <h2><i class="fa-solid fa-headset"></i> Chat with Admin</h2>
+        </div>
+        <div class="profile-chat-container">
+          <div class="profile-chat-messages" id="profile-chat-messages">
+            <div class="profile-chat-loading" id="profile-chat-loading"><i class="fa-solid fa-spinner fa-spin"></i> Loading chat...</div>
+          </div>
+          <div class="profile-chat-input-wrap">
+            <input type="text" id="profile-chat-input" class="chat-input" placeholder="Type a message..." maxlength="1000">
+            <button class="chat-send-btn" id="profile-chat-send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Payment Toast -->
+  <div class="payment-toast" id="payment-toast" style="display:none">
+    <div class="payment-toast-content">
+      <i class="fa-solid" id="payment-toast-icon"></i>
+      <div>
+        <h4 id="payment-toast-title"></h4>
+        <p id="payment-toast-msg"></p>
+      </div>
+      <i class="fa-solid fa-xmark payment-toast-close" id="payment-toast-close"></i>
+    </div>
+  </div>
+
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="/js/app.js"></script>
+  <script src="/js/profile.js"></script>
+</body>
+</html>

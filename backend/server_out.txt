@@ -1,0 +1,22 @@
+
+Server running on http://0.0.0.0:5000
+Local:   http://localhost:5000
+Network: http://<YOUR-IP>:5000
+
+Connected to MongoDB.
+[2026-06-13T14:17:46.008Z] OPTIONS /api/admin/check 204 8ms - 127.0.0.1
+[2026-06-13T14:17:46.017Z] OPTIONS /api/products 204 1ms - 127.0.0.1
+[2026-06-13T14:17:46.020Z] OPTIONS /api/settings 204 1ms - 127.0.0.1
+[2026-06-13T14:17:46.022Z] OPTIONS /api/admin/accounts 204 0ms - 127.0.0.1
+[2026-06-13T14:17:46.034Z] GET /api/admin/check 304 10ms - 127.0.0.1
+[2026-06-13T14:17:46.089Z] GET /api/products 304 54ms - 127.0.0.1
+[2026-06-13T14:17:46.096Z] GET /api/settings 304 54ms - 127.0.0.1
+[2026-06-13T14:17:46.099Z] GET /api/admin/accounts 304 55ms - 127.0.0.1
+[2026-06-13T14:17:47.212Z] OPTIONS /api/admin/orders? 204 1ms - 127.0.0.1
+[2026-06-13T14:17:47.330Z] GET /api/admin/orders? 304 113ms - 127.0.0.1
+[2026-06-13T14:17:47.935Z] OPTIONS /api/admin/users 204 1ms - 127.0.0.1
+[2026-06-13T14:17:47.992Z] GET /api/admin/users 304 51ms - 127.0.0.1
+[2026-06-13T14:17:49.101Z] GET /api/admin/users 304 47ms - 127.0.0.1
+[2026-06-13T14:17:50.430Z] GET /api/admin/orders? 304 100ms - 127.0.0.1
+[2026-06-13T14:19:24.238Z] GET /api/products 200 60ms - 127.0.0.1
+[2026-06-13T14:19:29.281Z] GET /api/products 200 43ms - 127.0.0.1
