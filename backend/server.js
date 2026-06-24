@@ -377,7 +377,8 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "https://cdnjs.cloudflare.com", "https://accounts.google.com"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://accounts.google.com"],
+      scriptSrcAttr: ["'unsafe-inline'"],
       styleSrc: ["'self'", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com", "https://fonts.gstatic.com", "https://accounts.google.com", "'unsafe-inline'"],
       imgSrc: ["'self'", "data:", "https:", "http:"],
       fontSrc: ["'self'", "https://cdnjs.cloudflare.com", "https://fonts.gstatic.com"],
