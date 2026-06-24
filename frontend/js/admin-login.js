@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  const API_BASE = 'http://localhost:5000';
+  const API_BASE = '';
   const _origFetch = window.fetch;
   window.fetch = function(url, opts) {
     if (typeof url === 'string' && url.startsWith('/api/')) {

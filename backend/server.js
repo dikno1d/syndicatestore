@@ -1534,8 +1534,34 @@ app.post('/api/admin/chat/send', authenticateAdmin, async (req, res) => {
 });
 
 // ============= FRONTEND STATIC FILES =============
-// Frontend is served separately on port 5500 (frontend-server.js)
-// Backend only provides API at port 5000
+
+const frontendDir = path.resolve(__dirname, '..', 'frontend');
+
+const FRONTEND_ROUTES = {
+  '/admin': 'admin.html',
+  '/admin-login': 'admin-login.html',
+  '/product': 'product.html',
+  '/checkout': 'checkout.html',
+  '/profile': 'profile.html',
+  '/chat': 'chat.html',
+};
+
+// Serve static frontend files
+app.use(express.static(frontendDir));
+
+// Route map for pretty URLs
+app.get(Object.keys(FRONTEND_ROUTES), (req, res) => {
+  res.sendFile(path.join(frontendDir, FRONTEND_ROUTES[req.path]));
+});
+
+// Slug-based product pages: /any-slug-name -> product.html
+app.get(/^\/[a-z0-9]+(?:-[a-z0-9]+)*$/, (req, res) => {
+  const filePath = path.join(frontendDir, req.path);
+  if (fs.existsSync(filePath) && !fs.statSync(filePath).isDirectory()) {
+    return res.sendFile(filePath);
+  }
+  res.sendFile(path.join(frontendDir, 'product.html'));
+});
 
 // ============= GLOBAL ERROR HANDLER =============
 
