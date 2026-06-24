@@ -1387,6 +1387,7 @@ ul {
   font-size: 0.9rem;
   transition: var(--transition-smooth);
   min-height: 80px;
+  cursor: pointer;
 }
 
 .contact-btn i {
