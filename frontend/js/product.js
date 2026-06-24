@@ -137,18 +137,17 @@
     // Purchase buttons
     if (detailAddCart) {
       detailAddCart.dataset.productId = product._id;
-      detailAddCart.onclick = () => {
+      detailAddCart.onclick = async () => {
         if (typeof addToCart === 'function') {
-          addToCart(product._id);
-          showToast('Added to Cart!', 'success');
+          await addToCart(product._id);
         }
       };
     }
     if (detailBuyNow) {
       detailBuyNow.dataset.productId = product._id;
-      detailBuyNow.onclick = () => {
+      detailBuyNow.onclick = async () => {
         if (typeof buyNow === 'function') {
-          buyNow(product._id);
+          await buyNow(product._id);
         } else {
           showToast('Please sign in to buy now.', 'info');
         }
