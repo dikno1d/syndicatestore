@@ -128,8 +128,24 @@
     } catch (err) { /* silent */ }
   };
 
+  // Fetch Google config then init sign-in
+  let chatGoogleClientId = '';
+  async function fetchChatGoogleConfig() {
+    try {
+      const res = await fetch('/api/auth/config');
+      if (res.ok) {
+        const config = await res.json();
+        chatGoogleClientId = config.googleClientId;
+      }
+    } catch (e) { /* silent */ }
+  }
+
   // Initialize Google Sign-In for chat page
   function initChatGoogleSignIn() {
+    if (!chatGoogleClientId) {
+      setTimeout(initChatGoogleSignIn, 500);
+      return;
+    }
     if (typeof google === 'undefined' || !google.accounts) {
       setTimeout(initChatGoogleSignIn, 500);
       return;
@@ -137,7 +153,7 @@
     const signinBtnContainer = document.getElementById('chat-google-btn');
     if (signinBtnContainer && signinBtnContainer.children.length === 0) {
       google.accounts.id.initialize({
-        client_id: '226982067584-6ks34tah493p0vqpioa194mtvjkus18f.apps.googleusercontent.com',
+        client_id: chatGoogleClientId,
         callback: window.handleChatGoogleCredential,
         cancel_on_tap_outside: false
       });
@@ -154,5 +170,5 @@
   }
 
   checkChatAuth();
-  setTimeout(initChatGoogleSignIn, 1000);
+  fetchChatGoogleConfig().then(() => setTimeout(initChatGoogleSignIn, 500));
 })();

@@ -22,6 +22,7 @@
   const detailWhatsapp = document.getElementById('detail-whatsapp');
   const detailInstagram = document.getElementById('detail-instagram');
   const detailDiscord = document.getElementById('detail-discord');
+  const detailYoutube = document.getElementById('detail-youtube');
   const detailAddCart = document.getElementById('detail-add-cart');
   const detailBuyNow = document.getElementById('detail-buy-now');
 
@@ -130,9 +131,22 @@
       .replace('{product_price}', `Rs. ${Number(product.price).toLocaleString()}`);
     const encodedMsg = encodeURIComponent(msgTemplate);
     const cleanWhatsapp = (typeof contactSettings !== 'undefined' && contactSettings.whatsapp || '').replace(/[^0-9+]/g, '');
-    if (detailWhatsapp) detailWhatsapp.href = `https://wa.me/${cleanWhatsapp}?text=${encodedMsg}`;
-    if (detailInstagram) detailInstagram.href = `https://instagram.com/${((typeof contactSettings !== 'undefined' && contactSettings.instagram) || '').replace('@', '')}`;
-    if (detailDiscord) detailDiscord.href = (typeof contactSettings !== 'undefined' && contactSettings.discord) || 'https://discord.gg/syndicatestore';
+    if (detailWhatsapp) {
+      detailWhatsapp.href = `https://wa.me/${cleanWhatsapp}?text=${encodedMsg}`;
+      detailWhatsapp.style.display = (typeof contactSettings !== 'undefined' && contactSettings.showWhatsapp !== false) ? '' : 'none';
+    }
+    if (detailInstagram) {
+      detailInstagram.href = `https://instagram.com/${((typeof contactSettings !== 'undefined' && contactSettings.instagram) || '').replace('@', '')}`;
+      detailInstagram.style.display = (typeof contactSettings !== 'undefined' && contactSettings.showInstagram !== false) ? '' : 'none';
+    }
+    if (detailDiscord) {
+      detailDiscord.href = (typeof contactSettings !== 'undefined' && contactSettings.discord) || 'https://discord.gg/syndicatestore';
+      detailDiscord.style.display = (typeof contactSettings !== 'undefined' && contactSettings.showDiscord !== false) ? '' : 'none';
+    }
+    if (detailYoutube) {
+      detailYoutube.href = (typeof contactSettings !== 'undefined' && contactSettings.youtube) || 'https://www.youtube.com/@syndicatestore07';
+      detailYoutube.style.display = (typeof contactSettings !== 'undefined' && contactSettings.showYoutube !== false) ? '' : 'none';
+    }
 
     // Purchase buttons
     if (detailAddCart) {

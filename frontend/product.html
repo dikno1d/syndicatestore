@@ -18,14 +18,95 @@
   <header class="navbar-header" id="navbar">
     <div class="nav-container">
       <a href="/" class="logo-brand">
-        <i class="fa-solid fa-gamepad logo-icon"></i>
+        <img id="nav-logo-img" class="nav-logo-img" src="/images/logo.png" alt="Logo" onload="this.style.display='inline'" onerror="this.style.display='none';document.getElementById('nav-logo-fallback').style.display='inline-block'">
+        <i id="nav-logo-fallback" class="fa-solid fa-gamepad logo-icon" style="display:none"></i>
         <span class="brand-font">SYNDICATE<span class="gradient-text">STORE</span></span>
       </a>
+
       <nav class="nav-links-wrap">
         <a href="/" class="nav-link"><i class="fa-solid fa-arrow-left"></i> Back to Store</a>
       </nav>
+
+      <div class="user-account-wrap" id="user-account-wrap">
+        <div id="google-button-container" class="google-btn-container"></div>
+        <div class="cart-icon-wrap" id="cart-icon-wrap" style="display:none">
+          <i class="fa-solid fa-cart-shopping cart-icon-nav" id="cart-icon-nav"></i>
+          <span class="cart-count-badge" id="cart-count-badge">0</span>
+        </div>
+        <div class="user-profile-btn" id="user-profile-btn" style="display:none">
+          <div class="user-profile-trigger" id="user-profile-trigger">
+            <img id="user-avatar-img" class="user-avatar-img" src="" alt="User">
+            <span id="user-name-display" class="user-name-display"></span>
+            <i class="fa-solid fa-chevron-down user-chevron"></i>
+          </div>
+          <div class="user-dropdown-menu" id="user-dropdown-menu">
+            <div class="dropdown-user-info">
+              <p class="dropdown-user-name" id="dropdown-user-name"></p>
+              <p class="dropdown-user-email" id="dropdown-user-email"></p>
+            </div>
+            <div class="dropdown-divider"></div>
+            <button id="cart-button" class="dropdown-action-btn">
+              <i class="fa-solid fa-cart-shopping"></i> My Cart
+            </button>
+            <button id="orders-button" class="dropdown-action-btn">
+              <i class="fa-solid fa-receipt"></i> My Orders
+            </button>
+            <a href="/profile.html" class="dropdown-action-btn profile-link-btn">
+              <i class="fa-solid fa-user"></i> My Profile
+            </a>
+            <a href="/chat" class="dropdown-action-btn profile-link-btn">
+              <i class="fa-solid fa-comment-dots"></i> Live Chat
+            </a>
+            <button id="logout-button" class="logout-button">
+              <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="mobile-nav-toggle" id="mobile-menu-toggle">
+        <i class="fa-solid fa-bars"></i>
+      </div>
     </div>
   </header>
+
+  <!-- Mobile Menu Drawer -->
+  <div class="mobile-menu-drawer" id="mobile-drawer">
+    <div class="drawer-header">
+      <span class="logo-brand">
+        <img class="nav-logo-img" src="/images/logo.png" alt="Logo" onload="this.style.display='inline'" onerror="this.style.display='none';document.getElementById('drawer-logo-fallback').style.display='inline-block'">
+        <i id="drawer-logo-fallback" class="fa-solid fa-gamepad logo-icon" style="display:none"></i>
+        <span class="brand-font">SYNDICATE<span class="gradient-text">STORE</span></span>
+      </span>
+      <i class="fa-solid fa-xmark drawer-close" id="drawer-close-btn"></i>
+    </div>
+    <div class="drawer-links">
+      <div class="drawer-user-section" id="drawer-user-section">
+        <div id="google-button-mobile-container" class="google-btn-container mobile-google-btn"></div>
+        <div class="drawer-user-info" id="drawer-user-info" style="display:none">
+          <img id="drawer-user-avatar" class="drawer-user-avatar" src="" alt="">
+          <div>
+            <p id="drawer-user-name" class="drawer-user-name"></p>
+            <p id="drawer-user-email" class="drawer-user-email"></p>
+          </div>
+        </div>
+      </div>
+      <a href="/" class="drawer-link"><i class="fa-solid fa-arrow-left"></i> Back to Store</a>
+      <hr class="drawer-divider">
+      <a href="#product-detail" class="drawer-link">Product Details</a>
+      <a href="/profile.html" class="drawer-link drawer-profile-link" style="display:none" id="drawer-profile-link">
+        <i class="fa-solid fa-user"></i> My Profile
+      </a>
+      <a href="/chat" class="drawer-link drawer-profile-link" style="display:none" id="drawer-chat-link">
+        <i class="fa-solid fa-comment-dots"></i> Live Chat
+      </a>
+      <div class="drawer-action-buttons">
+        <button id="drawer-logout-btn" class="drawer-logout-btn" style="display:none">
+          <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- Product Detail -->
   <section class="product-detail-section" id="product-detail">
@@ -93,12 +174,33 @@
               <a href="#" target="_blank" class="contact-btn discord-btn" id="detail-discord">
                 <i class="fa-brands fa-discord"></i><span>Discord</span>
               </a>
+              <a href="#" target="_blank" class="contact-btn youtube-btn" id="detail-youtube">
+                <i class="fa-brands fa-youtube"></i><span>YouTube</span>
+              </a>
             </div>
           </div>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- Sign-In Prompt Popup -->
+  <div class="modal-backdrop" id="signin-prompt-modal">
+    <div class="modal-card signin-prompt-card">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-user-lock"></i> Sign In Required</h2>
+        <i class="fa-solid fa-xmark modal-close-btn" id="signin-prompt-close"></i>
+      </div>
+      <div class="modal-body signin-prompt-body">
+        <div class="signin-prompt-content">
+          <i class="fa-solid fa-cart-plus signin-prompt-icon"></i>
+          <h3>Please sign in to continue</h3>
+          <p>Sign in with your Google account to add items to your cart or make a purchase.</p>
+          <div id="signin-prompt-google-btn" class="google-btn-container-centered"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Payment Toast -->
   <div class="payment-toast" id="payment-toast" style="display:none">
@@ -112,6 +214,7 @@
     </div>
   </div>
 
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="/js/app.js"></script>
   <script src="/js/product.js"></script>
 </body>

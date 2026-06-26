@@ -197,17 +197,29 @@ const invoiceSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
+const categorySchema = new mongoose.Schema({
+  name: { type: String, required: true, unique: true, trim: true, maxlength: 100 },
+  order: { type: Number, default: 0 },
+  createdAt: { type: Date, default: Date.now }
+});
+
 const settingsSchema = new mongoose.Schema({
   key: { type: String, default: 'contact_info', unique: true },
   whatsapp: { type: String, default: '', maxlength: 50 },
   discord: { type: String, default: '', maxlength: 200 },
   instagram: { type: String, default: '', maxlength: 100 },
+  youtube: { type: String, default: '', maxlength: 200 },
+  showWhatsapp: { type: Boolean, default: true },
+  showInstagram: { type: Boolean, default: true },
+  showDiscord: { type: Boolean, default: true },
+  showYoutube: { type: Boolean, default: true },
   customMessage: { type: String, default: '', maxlength: 1000 },
   qrCode: { type: String, default: '', maxlength: 500 }
 });
 
 productSchema.index({ createdAt: -1 });
 productSchema.index({ category: 1 });
+categorySchema.index({ order: 1 });
 invoiceSchema.index({ createdAt: -1 });
 
 const Admin = mongoose.model('Admin', adminSchema);
@@ -225,6 +237,7 @@ async function ensureSlug(product) {
 }
 
 const Invoice = mongoose.model('Invoice', invoiceSchema);
+const Category = mongoose.model('Category', categorySchema);
 const Settings = mongoose.model('Settings', settingsSchema);
 
 const paymentSchema = new mongoose.Schema({
@@ -496,6 +509,12 @@ async function seedDefaults() {
       await Settings.create({ key: 'contact_info' });
       console.log('Seeded default contact settings.');
     }
+    const existingCategories = await Category.countDocuments();
+    if (existingCategories === 0) {
+      const defaults = ['Gift Cards', 'Game Topups', 'Companion Gadgets', 'General'];
+      await Category.insertMany(defaults.map((name, i) => ({ name, order: i })));
+      console.log(`Seeded ${defaults.length} default categories.`);
+    }
     const hasDefaultAdmin = await Admin.findOne({ username: 'admin' });
     if (!hasDefaultAdmin) {
       if (!isPasswordStrong(ADMIN_PASSWORD)) {
@@ -526,6 +545,13 @@ function passwordError(password) {
 }
 
 // ============= GOOGLE OAUTH API =============
+
+app.get('/api/auth/config', (req, res) => {
+  res.json({
+    googleClientId: GOOGLE_CLIENT_ID,
+    frontendUrl: FRONTEND_URL
+  });
+});
 
 app.post('/api/auth/google', async (req, res) => {
   try {
@@ -1068,7 +1094,7 @@ app.delete('/api/admin/accounts/:username', authenticateAdmin, async (req, res) 
 app.get('/api/settings', async (req, res) => {
   try {
     let settings = await Settings.findOne({ key: 'contact_info' });
-    if (!settings) settings = { whatsapp: '', discord: '', instagram: '', customMessage: '', qrCode: '' };
+    if (!settings) settings = { whatsapp: '', discord: '', instagram: '', youtube: '', showWhatsapp: true, showInstagram: true, showDiscord: true, showYoutube: true, customMessage: '', qrCode: '' };
     res.json(settings);
   } catch (err) {
     res.status(500).json({ error: 'Failed to load settings.' });
@@ -1077,18 +1103,77 @@ app.get('/api/settings', async (req, res) => {
 
 app.post('/api/settings', authenticateAdmin, async (req, res) => {
   try {
-    const { whatsapp, discord, instagram, customMessage, qrCode } = req.body;
+    const { whatsapp, discord, instagram, youtube, showWhatsapp, showInstagram, showDiscord, showYoutube, customMessage, qrCode } = req.body;
     let settings = await Settings.findOne({ key: 'contact_info' });
     if (!settings) settings = new Settings({ key: 'contact_info' });
     settings.whatsapp = String(whatsapp || '').slice(0, 50);
     settings.discord = String(discord || '').slice(0, 200);
     settings.instagram = String(instagram || '').slice(0, 100);
+    settings.youtube = String(youtube || '').slice(0, 200);
+    settings.showWhatsapp = showWhatsapp === true || showWhatsapp === 'true';
+    settings.showInstagram = showInstagram === true || showInstagram === 'true';
+    settings.showDiscord = showDiscord === true || showDiscord === 'true';
+    settings.showYoutube = showYoutube === true || showYoutube === 'true';
     settings.customMessage = String(customMessage || '').slice(0, 1000);
     settings.qrCode = String(qrCode || '').slice(0, 500);
     await settings.save();
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: 'Failed to save settings.' });
+  }
+});
+
+// ============= CATEGORIES API =============
+
+app.get('/api/categories', async (req, res) => {
+  try {
+    const categories = await Category.find().sort({ order: 1, name: 1 }).lean();
+    res.json(categories);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to load categories.' });
+  }
+});
+
+app.post('/api/categories', authenticateAdmin, async (req, res) => {
+  try {
+    const { name, order } = req.body;
+    const clean = String(name || '').trim().slice(0, 100);
+    if (!clean) return res.status(400).json({ error: 'Category name is required.' });
+    const existing = await Category.findOne({ name: clean });
+    if (existing) return res.status(400).json({ error: 'Category already exists.' });
+    const category = await Category.create({ name: clean, order: Number(order) || 0 });
+    res.json({ success: true, category });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to create category.' });
+  }
+});
+
+app.put('/api/categories/:id', authenticateAdmin, async (req, res) => {
+  try {
+    const { name, order } = req.body;
+    const clean = String(name || '').trim().slice(0, 100);
+    if (!clean) return res.status(400).json({ error: 'Category name is required.' });
+    const dup = await Category.findOne({ name: clean, _id: { $ne: req.params.id } });
+    if (dup) return res.status(400).json({ error: 'Category name already exists.' });
+    const category = await Category.findByIdAndUpdate(
+      req.params.id,
+      { name: clean, order: Number(order) || 0 },
+      { new: true }
+    );
+    if (!category) return res.status(404).json({ error: 'Category not found.' });
+    res.json({ success: true, category });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update category.' });
+  }
+});
+
+app.delete('/api/categories/:id', authenticateAdmin, async (req, res) => {
+  try {
+    const category = await Category.findByIdAndDelete(req.params.id);
+    if (!category) return res.status(404).json({ error: 'Category not found.' });
+    res.json({ success: true, message: 'Category deleted.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete category.' });
   }
 });
 

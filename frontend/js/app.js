@@ -45,6 +45,11 @@ let contactSettings = {
   whatsapp: '+9779800000000',
   discord: 'https://discord.gg/syndicatestore',
   instagram: 'syndicate_store',
+  youtube: 'https://www.youtube.com/@syndicatestore07',
+  showWhatsapp: true,
+  showInstagram: true,
+  showDiscord: true,
+  showYoutube: true,
   customMessage: 'Hello! I would like to buy: {product_name} priced at {product_price}. Is it available?',
   qrCode: ''
 };
@@ -63,7 +68,7 @@ const productsGrid = document.getElementById('products-grid');
 const searchInput = document.getElementById('store-search-input');
 const mobileSearchInput = document.getElementById('mobile-search-input');
 const searchFeedback = document.getElementById('search-feedback-text');
-const categoryFilters = document.querySelectorAll('.filter-btn');
+let categoryFilters = [];
 
 // Modal Elements
 const purchaseModal = document.getElementById('purchase-modal');
@@ -77,6 +82,7 @@ const modalProductOriginalPrice = document.getElementById('modal-product-origina
 const contactWhatsapp = document.getElementById('contact-whatsapp');
 const contactInstagram = document.getElementById('contact-instagram');
 const contactDiscord = document.getElementById('contact-discord');
+const contactYoutube = document.getElementById('contact-youtube');
 const btnAddToCart = document.getElementById('btn-add-to-cart');
 const btnBuyNow = document.getElementById('btn-buy-now');
 
@@ -115,14 +121,32 @@ const checkoutEsewaFields = document.getElementById('checkout-esewa-fields');
 let checkoutCashFields = document.getElementById('checkout-cash-fields');
 const btnPlaceOrder = document.getElementById('btn-place-order');
 
+// Fetch Google OAuth config from backend
+let googleClientId = '';
+async function fetchGoogleConfig() {
+  try {
+    const res = await fetch('/api/auth/config');
+    if (res.ok) {
+      const config = await res.json();
+      googleClientId = config.googleClientId;
+    }
+  } catch (e) {
+    console.error('Failed to fetch Google config:', e);
+  }
+}
+
 // Initialize Google Sign-In
 function initGoogleSignIn() {
+  if (!googleClientId) {
+    setTimeout(initGoogleSignIn, 500);
+    return;
+  }
   if (typeof google === 'undefined' || !google.accounts) {
     setTimeout(initGoogleSignIn, 500);
     return;
   }
   google.accounts.id.initialize({
-    client_id: '226982067584-6ks34tah493p0vqpioa194mtvjkus18f.apps.googleusercontent.com',
+    client_id: googleClientId,
     callback: handleGoogleCredential,
     cancel_on_tap_outside: false
   });
@@ -276,6 +300,7 @@ async function loadCartCount() {
 async function addToCart(productId) {
   if (!currentUser) {
     pendingAction = { type: 'addToCart', productId };
+    if (!signinPromptModal) { window.location.href = '/'; return; }
     openSigninPrompt();
     return;
   }
@@ -301,6 +326,7 @@ async function addToCart(productId) {
 async function buyNow(productId) {
   if (!currentUser) {
     pendingAction = { type: 'buyNow', productId };
+    if (!signinPromptModal) { window.location.href = '/'; return; }
     openSigninPrompt();
     return;
   }
@@ -415,13 +441,14 @@ async function renderCartModal() {
 // ===================== SIGN-IN PROMPT =====================
 
 function openSigninPrompt() {
+  if (!signinPromptModal) return;
   signinPromptModal.classList.add('open');
   document.body.style.overflow = 'hidden';
   setTimeout(initGoogleSignIn, 300);
 }
 
 function closeSigninPrompt() {
-  signinPromptModal.classList.remove('open');
+  if (signinPromptModal) signinPromptModal.classList.remove('open');
   document.body.style.overflow = '';
   pendingAction = null;
 }
@@ -441,7 +468,13 @@ function openCheckoutModal() {
   const qrImg = document.getElementById('checkout-qr-img');
   if (qrImg) qrImg.src = contactSettings.qrCode || '/images/qr.png';
   const discordLink = document.getElementById('checkout-discord-link');
-  if (discordLink) discordLink.href = contactSettings.discord || 'https://discord.gg/syndicatestore';
+  const discordWrapper = document.getElementById('checkout-discord-wrapper');
+  if (discordLink) {
+    discordLink.href = contactSettings.discord || 'https://discord.gg/syndicatestore';
+  }
+  if (discordWrapper) {
+    discordWrapper.style.display = contactSettings.showDiscord !== false ? '' : 'none';
+  }
 }
 
 function closeCheckoutModal() {
@@ -539,13 +572,15 @@ async function handlePlaceOrder(e) {
 // ===================== PRODUCT ACTIONS =====================
 
 // Page Load Initialization
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  fetchCategories();
   fetchSettings();
   fetchProducts();
   fetchFeaturedProducts();
   setupEventListeners();
   checkUserAuth();
-  setTimeout(initGoogleSignIn, 1000);
+  await fetchGoogleConfig();
+  setTimeout(initGoogleSignIn, 500);
   setTimeout(checkPaymentStatus, 500);
 });
 
@@ -559,13 +594,36 @@ async function fetchProducts() {
     renderProducts();
   } catch (error) {
     console.error('Error fetching products:', error);
-    productsGrid.innerHTML = `
-      <div class="error-state" style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--secondary-neon);">
-        <i class="fa-solid fa-triangle-exclamation" style="font-size: 3rem; margin-bottom: 15px;"></i>
-        <h3>Failed to load products</h3>
-        <p style="color: var(--text-gray); margin-top: 10px;">Please check your server connection and database setup.</p>
-        <button data-action="retry-products" class="btn btn-secondary" style="margin-top: 20px;">Try Again</button>
-      </div>`;
+    if (productsGrid) {
+      productsGrid.innerHTML = `
+        <div class="error-state" style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--secondary-neon);">
+          <i class="fa-solid fa-triangle-exclamation" style="font-size: 3rem; margin-bottom: 15px;"></i>
+          <h3>Failed to load products</h3>
+          <p style="color: var(--text-gray); margin-top: 10px;">Please check your server connection and database setup.</p>
+          <button data-action="retry-products" class="btn btn-secondary" style="margin-top: 20px;">Try Again</button>
+        </div>`;
+    }
+  }
+}
+
+// Fetch categories from API and render filter buttons
+async function fetchCategories() {
+  try {
+    const response = await fetch('/api/categories');
+    if (!response.ok) return;
+    const categories = await response.json();
+    const container = document.getElementById('category-filters-list');
+    if (!container) return;
+    categories.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn';
+      btn.setAttribute('data-category', cat.name);
+      btn.textContent = cat.name;
+      container.appendChild(btn);
+    });
+    categoryFilters = container.querySelectorAll('.filter-btn');
+  } catch (error) {
+    console.error('Error fetching categories:', error);
   }
 }
 
@@ -587,10 +645,24 @@ function updateStaticContactLinks() {
   const footerWhatsapp = document.getElementById('footer-link-whatsapp');
   const footerInstagram = document.getElementById('footer-link-instagram');
   const footerDiscord = document.getElementById('footer-link-discord');
+  const footerYoutube = document.getElementById('footer-link-youtube');
   const cleanWhatsapp = contactSettings.whatsapp.replace(/[^0-9+]/g, '');
-  if (footerWhatsapp) footerWhatsapp.href = `https://wa.me/${cleanWhatsapp}`;
-  if (footerInstagram) footerInstagram.href = `https://instagram.com/${contactSettings.instagram.replace('@', '')}`;
-  if (footerDiscord) footerDiscord.href = contactSettings.discord || 'https://discord.gg/syndicatestore';
+  if (footerWhatsapp) {
+    footerWhatsapp.href = `https://wa.me/${cleanWhatsapp}`;
+    footerWhatsapp.style.display = contactSettings.showWhatsapp !== false ? '' : 'none';
+  }
+  if (footerInstagram) {
+    footerInstagram.href = `https://instagram.com/${contactSettings.instagram.replace('@', '')}`;
+    footerInstagram.style.display = contactSettings.showInstagram !== false ? '' : 'none';
+  }
+  if (footerDiscord) {
+    footerDiscord.href = contactSettings.discord || 'https://discord.gg/syndicatestore';
+    footerDiscord.style.display = contactSettings.showDiscord !== false ? '' : 'none';
+  }
+  if (footerYoutube) {
+    footerYoutube.href = contactSettings.youtube || 'https://www.youtube.com/@syndicatestore07';
+    footerYoutube.style.display = contactSettings.showYoutube !== false ? '' : 'none';
+  }
 }
 
 // ===================== HERO SLIDER =====================
@@ -681,6 +753,7 @@ function resetSlideInterval() { stopSlideInterval(); startSlideInterval(); }
 // ===================== PRODUCT LIST =====================
 
 function renderProducts() {
+  if (!productsGrid) return;
   const filtered = allProducts.filter(product => {
     const matchCategory = selectedCategory === 'all' || product.category === selectedCategory;
     const matchSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -761,8 +834,15 @@ function openPurchaseModal(productId) {
   const encodedMsg = encodeURIComponent(parsedMsg);
   const cleanWhatsapp = contactSettings.whatsapp.replace(/[^0-9+]/g, '');
   contactWhatsapp.href = `https://wa.me/${cleanWhatsapp}?text=${encodedMsg}`;
+  contactWhatsapp.style.display = contactSettings.showWhatsapp !== false ? '' : 'none';
   contactInstagram.href = `https://instagram.com/${contactSettings.instagram.replace('@', '')}`;
+  contactInstagram.style.display = contactSettings.showInstagram !== false ? '' : 'none';
   contactDiscord.href = contactSettings.discord || 'https://discord.gg/syndicatestore';
+  contactDiscord.style.display = contactSettings.showDiscord !== false ? '' : 'none';
+  if (contactYoutube) {
+    contactYoutube.href = contactSettings.youtube || 'https://www.youtube.com/@syndicatestore07';
+    contactYoutube.style.display = contactSettings.showYoutube !== false ? '' : 'none';
+  }
 
   // Set product for buttons
   btnAddToCart.dataset.productId = productId;
@@ -773,6 +853,7 @@ function openPurchaseModal(productId) {
 }
 
 function closePurchaseModal() {
+  if (!purchaseModal) return;
   purchaseModal.classList.remove('open');
   document.body.style.overflow = '';
 }
@@ -781,6 +862,7 @@ function closePurchaseModal() {
 function setupEventListeners() {
   // Navigation scrolling effect
   window.addEventListener('scroll', () => {
+    if (!navbar) return;
     if (window.scrollY > 50) navbar.classList.add('scrolled');
     else navbar.classList.remove('scrolled');
   });
@@ -788,29 +870,33 @@ function setupEventListeners() {
   // Search input listeners
   const handleSearch = (e) => {
     searchQuery = e.target.value;
-    if (e.target === searchInput) mobileSearchInput.value = searchQuery;
-    else searchInput.value = searchQuery;
+    if (e.target === searchInput && mobileSearchInput) mobileSearchInput.value = searchQuery;
+    else if (searchInput) searchInput.value = searchQuery;
     renderProducts();
   };
-  searchInput.addEventListener('input', handleSearch);
-  mobileSearchInput.addEventListener('input', handleSearch);
+  if (searchInput) searchInput.addEventListener('input', handleSearch);
+  if (mobileSearchInput) mobileSearchInput.addEventListener('input', handleSearch);
 
-  // Category filter buttons
-  categoryFilters.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      categoryFilters.forEach(b => b.classList.remove('active'));
-      e.target.classList.add('active');
-      selectedCategory = e.target.getAttribute('data-category');
+  // Category filter buttons (event delegation)
+  const filterContainer = document.getElementById('category-filters-list');
+  if (filterContainer) {
+    filterContainer.addEventListener('click', (e) => {
+      const btn = e.target.closest('.filter-btn');
+      if (!btn) return;
+      filterContainer.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedCategory = btn.getAttribute('data-category');
       renderProducts();
     });
-  });
+  }
 
   // Mobile Drawer Toggle
-  mobileMenuToggle.addEventListener('click', () => mobileDrawer.classList.add('open'));
-  drawerCloseBtn.addEventListener('click', () => mobileDrawer.classList.remove('open'));
+  if (mobileMenuToggle) mobileMenuToggle.addEventListener('click', () => { if (mobileDrawer) mobileDrawer.classList.add('open'); });
+  if (drawerCloseBtn) drawerCloseBtn.addEventListener('click', () => { if (mobileDrawer) mobileDrawer.classList.remove('open'); });
 
   // Product grid click delegation
-  productsGrid.addEventListener('click', (e) => {
+  if (productsGrid) {
+    productsGrid.addEventListener('click', (e) => {
     const addCartBtn = e.target.closest('.add-cart-btn');
     const buyNowBtn = e.target.closest('.buy-now-btn');
     const card = e.target.closest('.product-card');
@@ -834,6 +920,7 @@ function setupEventListeners() {
     }
     if (retryBtn) fetchProducts();
   });
+  }
 
   // Hero slider slide click delegation
   const heroSlider = document.getElementById('hero-slider');
@@ -850,40 +937,42 @@ function setupEventListeners() {
   }
 
   // Modal handlers
-  modalCloseBtn.addEventListener('click', closePurchaseModal);
-  purchaseModal.addEventListener('click', (e) => { if (e.target === purchaseModal) closePurchaseModal(); });
+  if (modalCloseBtn) modalCloseBtn.addEventListener('click', closePurchaseModal);
+  if (purchaseModal) purchaseModal.addEventListener('click', (e) => { if (e.target === purchaseModal) closePurchaseModal(); });
 
   // Add to Cart and Buy Now buttons in modal
-  btnAddToCart.addEventListener('click', () => {
+  if (btnAddToCart) btnAddToCart.addEventListener('click', () => {
     const pid = btnAddToCart.dataset.productId;
     if (pid) { addToCart(pid); closePurchaseModal(); }
   });
-  btnBuyNow.addEventListener('click', () => {
+  if (btnBuyNow) btnBuyNow.addEventListener('click', () => {
     const pid = btnBuyNow.dataset.productId;
     if (pid) { buyNow(pid); closePurchaseModal(); }
   });
 
   // FAQ Accordion Toggle
   const faqItems = document.querySelectorAll('.faq-item');
-  faqItems.forEach(item => {
-    const question = item.querySelector('.faq-question');
-    const answer = item.querySelector('.faq-answer');
-    question.addEventListener('click', () => {
-      const isActive = item.classList.contains('active');
-      faqItems.forEach(otherItem => {
-        otherItem.classList.remove('active');
-        otherItem.querySelector('.faq-answer').style.maxHeight = null;
+  if (faqItems.length > 0) {
+    faqItems.forEach(item => {
+      const question = item.querySelector('.faq-question');
+      const answer = item.querySelector('.faq-answer');
+      question.addEventListener('click', () => {
+        const isActive = item.classList.contains('active');
+        faqItems.forEach(otherItem => {
+          otherItem.classList.remove('active');
+          otherItem.querySelector('.faq-answer').style.maxHeight = null;
+        });
+        if (!isActive) {
+          item.classList.add('active');
+          answer.style.maxHeight = answer.scrollHeight + "px";
+        }
       });
-      if (!isActive) {
-        item.classList.add('active');
-        answer.style.maxHeight = answer.scrollHeight + "px";
-      }
     });
-  });
+  }
 
   // Smooth links drawer close
   document.querySelectorAll('.drawer-link').forEach(link => {
-    link.addEventListener('click', () => mobileDrawer.classList.remove('open'));
+    link.addEventListener('click', () => { if (mobileDrawer) mobileDrawer.classList.remove('open'); });
   });
 
   // Payment Toast Close
@@ -1171,6 +1260,7 @@ function showPaymentToast(type, title, msg) {
   const icon = document.getElementById('payment-toast-icon');
   const titleEl = document.getElementById('payment-toast-title');
   const msgEl = document.getElementById('payment-toast-msg');
+  if (!toast || !icon || !titleEl || !msgEl) return;
   if (type === 'success') {
     icon.className = 'fa-solid fa-circle-check';
     toast.style.borderLeftColor = 'var(--price-green)';

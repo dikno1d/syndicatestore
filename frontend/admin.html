@@ -38,13 +38,16 @@
         <button class="menu-btn" data-target="section-chats">
           <i class="fa-solid fa-comment-dots"></i> Chats
         </button>
+        <button class="menu-btn" data-target="section-categories">
+          <i class="fa-solid fa-tags"></i> Categories
+        </button>
         <button class="menu-btn" data-target="section-settings">
           <i class="fa-solid fa-sliders"></i> Settings
         </button>
         <button class="menu-btn" data-target="section-security">
           <i class="fa-solid fa-shield-halved"></i> Security
         </button>
-        <a href="http://127.0.0.1:5500" class="menu-btn storefront-btn" target="_blank">
+        <a href="/" class="menu-btn storefront-btn" target="_blank">
           <i class="fa-solid fa-arrow-up-right-from-square"></i> View Storefront
         </a>
       </nav>
@@ -277,6 +280,28 @@
         </div>
       </section>
 
+      <!-- =================== SECTION: CATEGORIES =================== -->
+      <section class="dashboard-section" id="section-categories">
+        <div class="settings-card">
+          <h2><i class="fa-solid fa-tags"></i> Manage Categories</h2>
+          <p class="settings-subtext">Create and manage product categories. These appear as filter buttons on the storefront and in the product form.</p>
+          <div class="cat-form-row">
+            <input type="text" id="cat-name" placeholder="Enter category name" maxlength="100">
+            <button class="btn btn-primary" id="btn-add-category"><i class="fa-solid fa-plus"></i> Add</button>
+          </div>
+          <div class="table-container" style="margin-top:16px">
+            <table class="products-table">
+              <thead>
+                <tr><th>Name</th><th>Products</th><th>Actions</th></tr>
+              </thead>
+              <tbody id="categories-table-body">
+                <tr><td colspan="3" class="loading-td"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
       <!-- =================== SECTION: SETTINGS =================== -->
       <section class="dashboard-section" id="section-settings">
         <div class="settings-card">
@@ -299,6 +324,36 @@
               <label for="s-instagram"><i class="fa-brands fa-instagram" style="color:#e1306c"></i> Instagram Username</label>
               <input type="text" id="s-instagram" placeholder="syndicate_store">
               <span class="field-hint">Username only, no full URL.</span>
+            </div>
+            <div class="form-group">
+              <label for="s-youtube"><i class="fa-brands fa-youtube" style="color:#ff0000"></i> YouTube Channel Link</label>
+              <input type="text" id="s-youtube" placeholder="https://www.youtube.com/@syndicatestore07">
+              <span class="field-hint">Full URL to your YouTube channel.</span>
+            </div>
+            <div class="form-group">
+              <label>Show/Hide Social Buttons on Storefront</label>
+              <div class="toggle-row">
+                <label class="toggle-label">
+                  <input type="checkbox" id="s-show-whatsapp" checked>
+                  <span class="toggle-switch"></span>
+                  <span><i class="fa-brands fa-whatsapp" style="color:#25d366"></i> WhatsApp</span>
+                </label>
+                <label class="toggle-label">
+                  <input type="checkbox" id="s-show-instagram" checked>
+                  <span class="toggle-switch"></span>
+                  <span><i class="fa-brands fa-instagram" style="color:#e1306c"></i> Instagram</span>
+                </label>
+                <label class="toggle-label">
+                  <input type="checkbox" id="s-show-discord" checked>
+                  <span class="toggle-switch"></span>
+                  <span><i class="fa-brands fa-discord" style="color:#5865f2"></i> Discord</span>
+                </label>
+                <label class="toggle-label">
+                  <input type="checkbox" id="s-show-youtube" checked>
+                  <span class="toggle-switch"></span>
+                  <span><i class="fa-brands fa-youtube" style="color:#ff0000"></i> YouTube</span>
+                </label>
+              </div>
             </div>
             <div class="form-group">
               <label for="s-message">WhatsApp Pre-filled Message Template</label>
@@ -467,10 +522,7 @@
             <div class="form-group">
               <label>Category *</label>
               <select id="prod-category" required>
-                <option value="Gift Cards">Gift Cards</option>
-                <option value="Game Topups">Game Topups</option>
-                <option value="Companion Gadgets">Desk Companions</option>
-                <option value="General">General</option>
+                <option value="">Select a category...</option>
               </select>
             </div>
             <div class="form-group">
@@ -634,7 +686,7 @@
           <div class="invoice-brand">
             <img src="/images/logo.png" alt="Logo" class="print-logo-img" onerror="this.style.display='none'" style="height:40px;margin-bottom:6px">
             <h1 class="brand-font"><i class="fa-solid fa-gamepad"></i> SYNDICATE STORE</h1>
-            <p>Kathmandu, Nepal | support@syndicatestore.com</p>
+            <p>India | syndicatestore07@gmail.com</p>
           </div>
           <div class="invoice-meta">
             <h2>INVOICE</h2>

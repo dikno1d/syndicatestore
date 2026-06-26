@@ -17,6 +17,7 @@ window.fetch = function(url, opts) {
 };
 
 let productsList = [];
+let categoriesList = [];
 let invoicesList = [];
 let currentInvoiceItems = [];
 
@@ -28,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupSidebar();
   setupAlerts();
   loadProducts();
+  loadCategories();
   loadSettings();
   setupProductDrawer();
   setupInvoiceDrawer();
@@ -149,6 +151,7 @@ async function loadProducts() {
     if (!res.ok) throw new Error();
     productsList = await res.json();
     renderProductsTable();
+    refreshCategoryCounts();
   } catch {
     showAlert('Failed to load products.', 'error');
     document.getElementById('products-table-body').innerHTML = `<tr><td colspan="6" class="loading-td">Failed to load products.</td></tr>`;
@@ -1079,16 +1082,125 @@ async function saveOrderUpdate(e) {
 const origSidebarSetup = setupSidebar;
 setupSidebar = function() {
   origSidebarSetup.call(this);
-  // Override menu click to also load payments when payments tab is opened
   const menuBtns = document.querySelectorAll('.menu-btn[data-target]');
   menuBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      if (btn.getAttribute('data-target') === 'section-payments') {
+      const target = btn.getAttribute('data-target');
+      if (target === 'section-payments') {
         loadPayments();
+      } else if (target === 'section-categories') {
+        loadCategories();
       }
     });
   });
+  const addBtn = document.getElementById('btn-add-category');
+  if (addBtn) addBtn.addEventListener('click', addCategory);
+  const catInput = document.getElementById('cat-name');
+  if (catInput) catInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addCategory(); } });
 };
+
+// ===================== CATEGORIES =====================
+async function loadCategories() {
+  try {
+    const res = await fetch('/api/categories');
+    if (!res.ok) throw new Error();
+    categoriesList = await res.json();
+    renderCategoriesTable(categoriesList);
+    populateCategoryDropdown(categoriesList);
+  } catch {
+    document.getElementById('categories-table-body').innerHTML = '<tr><td colspan="3" class="loading-td">Failed to load categories.</td></tr>';
+  }
+}
+
+function refreshCategoryCounts() {
+  renderCategoriesTable(categoriesList);
+}
+
+function renderCategoriesTable(categories) {
+  const tbody = document.getElementById('categories-table-body');
+  if (!categories.length) {
+    tbody.innerHTML = '<tr><td colspan="3" class="loading-td">No categories yet. Add one above.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = categories.map(c => {
+    const count = productsList.filter(p => p.category === c.name).length;
+    return `
+    <tr data-cat-id="${c._id}">
+      <td>${c.name}</td>
+      <td>${count}</td>
+      <td>
+        <div class="action-btns-wrap">
+          <button class="btn-action edit" title="Edit" onclick="editCategory('${c._id}')"><i class="fa-solid fa-pen-to-square"></i></button>
+          <button class="btn-action delete" title="Delete" onclick="deleteCategory('${c._id}')"><i class="fa-solid fa-trash-can"></i></button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function populateCategoryDropdown(categories) {
+  const sel = document.getElementById('prod-category');
+  if (!sel) return;
+  const current = sel.value;
+  sel.innerHTML = '<option value="">Select a category...</option>' +
+    categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+  sel.value = current;
+}
+
+async function addCategory() {
+  const input = document.getElementById('cat-name');
+  const name = input.value.trim();
+  if (!name) { showAlert('Please enter a category name.', 'error'); return; }
+  try {
+    const res = await fetch('/api/categories', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name })
+    });
+    const data = await res.json();
+    if (res.ok && data.success) {
+      input.value = '';
+      showAlert('Category created!', 'success');
+      loadCategories();
+    } else {
+      showAlert(data.error || 'Failed to create category.', 'error');
+    }
+  } catch {
+    showAlert('Server error.', 'error');
+  }
+}
+
+function editCategory(id) {
+  const row = document.querySelector(`tr[data-cat-id="${id}"]`);
+  if (!row) return;
+  const name = row.querySelector('td:first-child').textContent;
+  const newName = prompt('Edit category name:', name);
+  if (!newName || newName.trim() === name) return;
+  fetch('/api/categories/' + id, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: newName.trim() })
+  }).then(res => res.json()).then(data => {
+    if (data.success) { showAlert('Category updated!', 'success'); loadCategories(); }
+    else showAlert(data.error || 'Failed to update.', 'error');
+  }).catch(() => showAlert('Server error.', 'error'));
+}
+
+async function deleteCategory(id) {
+  if (!confirm('Delete this category? Products using it will keep the name but the filter will be removed.')) return;
+  try {
+    const res = await fetch('/api/categories/' + id, { method: 'DELETE' });
+    const data = await res.json();
+    if (res.ok && data.success) {
+      showAlert('Category deleted.', 'success');
+      loadCategories();
+    } else {
+      showAlert(data.error || 'Failed to delete.', 'error');
+    }
+  } catch {
+    showAlert('Server error.', 'error');
+  }
+}
 
 // ===================== SETTINGS =====================
 async function loadSettings() {
@@ -1099,6 +1211,11 @@ async function loadSettings() {
     document.getElementById('s-whatsapp').value = data.whatsapp || '';
     document.getElementById('s-discord').value = data.discord || '';
     document.getElementById('s-instagram').value = data.instagram || '';
+    document.getElementById('s-youtube').value = data.youtube || '';
+    document.getElementById('s-show-whatsapp').checked = data.showWhatsapp !== false;
+    document.getElementById('s-show-instagram').checked = data.showInstagram !== false;
+    document.getElementById('s-show-discord').checked = data.showDiscord !== false;
+    document.getElementById('s-show-youtube').checked = data.showYoutube !== false;
     document.getElementById('s-message').value = data.customMessage || '';
     document.getElementById('s-qr-url').value = data.qrCode || '';
     document.getElementById('qr-preview-box').src = data.qrCode || '';
@@ -1146,6 +1263,11 @@ function setupSettingsForm() {
           whatsapp: document.getElementById('s-whatsapp').value,
           discord: document.getElementById('s-discord').value,
           instagram: document.getElementById('s-instagram').value,
+          youtube: document.getElementById('s-youtube').value,
+          showWhatsapp: document.getElementById('s-show-whatsapp').checked,
+          showInstagram: document.getElementById('s-show-instagram').checked,
+          showDiscord: document.getElementById('s-show-discord').checked,
+          showYoutube: document.getElementById('s-show-youtube').checked,
           customMessage: document.getElementById('s-message').value,
           qrCode: qrValue
         })

@@ -770,3 +770,84 @@ select option { background: #1e293b; }
   border-top: 1px solid var(--border-color);
   background: var(--bg-card);
 }
+
+/* Toggle switches for show/hide social buttons */
+.toggle-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-gray);
+}
+
+.toggle-label input[type="checkbox"] {
+  display: none;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 11px;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  transition: var(--transition);
+}
+
+.toggle-label input[type="checkbox"]:checked + .toggle-switch {
+  background: var(--primary-neon);
+  box-shadow: 0 0 8px var(--border-glow);
+}
+
+.toggle-label input[type="checkbox"]:checked + .toggle-switch::after {
+  left: 21px;
+}
+
+/* Categories management */
+.cat-form-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.cat-form-row input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-input);
+  color: var(--text-white);
+  font-size: 14px;
+  outline: none;
+  transition: var(--transition);
+}
+
+.cat-form-row input:focus {
+  border-color: var(--primary-neon);
+  box-shadow: 0 0 8px var(--border-glow);
+}
+
+.cat-form-row .btn {
+  white-space: nowrap;
+  padding: 10px 20px;
+}

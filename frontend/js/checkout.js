@@ -18,6 +18,7 @@
   const checkoutCashFields = document.getElementById('checkout-cash-fields');
   const qrImg = document.getElementById('checkout-qr-img');
   const discordLink = document.getElementById('checkout-discord-link');
+  const discordWrapper = document.getElementById('checkout-discord-wrapper');
 
   async function init() {
     try {
@@ -27,6 +28,7 @@
         const settings = await settingsRes.json();
         if (qrImg) qrImg.src = settings.qrCode || '/images/qr.png';
         if (discordLink) discordLink.href = settings.discord || 'https://discord.gg/syndicatestore';
+        if (discordWrapper) discordWrapper.style.display = settings.showDiscord !== false ? '' : 'none';
       }
 
       // Fetch cart items via API
