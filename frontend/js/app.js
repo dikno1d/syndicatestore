@@ -154,12 +154,13 @@ function initGoogleSignIn() {
     const btnContainers = [googleBtnContainer, googleBtnMobileContainer, signinPromptGoogleBtn].filter(Boolean);
     btnContainers.forEach(container => {
       if (container && container.children.length === 0) {
+        const isNavbar = container === googleBtnContainer;
         google.accounts.id.renderButton(container, {
-          type: 'standard',
-          shape: container === signinPromptGoogleBtn ? 'rectangular' : 'circle',
+          type: isNavbar ? 'icon' : 'standard',
+          shape: isNavbar ? 'circle' : 'rectangular',
           theme: 'outline',
-          size: 'large',
-          text: container === signinPromptGoogleBtn ? 'signin_with' : 'signin_with',
+          size: isNavbar ? 'medium' : 'large',
+          text: 'signin_with',
           logo_alignment: 'left',
           width: container === signinPromptGoogleBtn ? '280' : undefined
         });

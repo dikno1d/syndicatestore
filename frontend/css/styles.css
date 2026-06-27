@@ -1781,7 +1781,7 @@ ul {
 
 .google-btn-container iframe {
   max-width: none !important;
-  min-width: 100px !important;
+  min-width: 0 !important;
 }
 
 /* User profile button */
@@ -2079,7 +2079,7 @@ ul {
 
   .google-btn-container iframe {
     max-width: none !important;
-    min-width: 80px !important;
+    min-width: 0 !important;
   }
 
   .cart-count-badge {
@@ -2129,10 +2129,8 @@ ul {
     min-width: 0;
   }
   .logo-brand span {
+    font-size: clamp(0.8rem, 3.5vw, 1.1rem);
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 110px;
   }
   .user-account-wrap {
     margin-left: 0;
@@ -2142,7 +2140,7 @@ ul {
   }
   .google-btn-container iframe {
     max-width: none !important;
-    min-width: 60px !important;
+    min-width: 0 !important;
   }
   .user-avatar-img {
     width: 28px;
