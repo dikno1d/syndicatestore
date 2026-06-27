@@ -1784,6 +1784,14 @@ ul {
   min-width: 0 !important;
 }
 
+.google-btn-label {
+  display: none;
+  font-size: 0.75rem;
+  color: var(--text-gray);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
 /* User profile button */
 .user-profile-btn {
   display: none;
@@ -2059,9 +2067,13 @@ ul {
 
   .user-account-wrap {
     margin-left: 0;
-    gap: 10px;
+    gap: 6px;
     flex-shrink: 1;
     min-width: 0;
+  }
+
+  .google-btn-label {
+    display: inline;
   }
 
   .user-name-display {
