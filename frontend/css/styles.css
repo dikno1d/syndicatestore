@@ -1780,7 +1780,7 @@ ul {
 }
 
 .google-btn-container iframe {
-  max-width: 240px !important;
+  max-width: none !important;
   min-width: 100px !important;
 }
 
@@ -1945,7 +1945,7 @@ ul {
 }
 
 .mobile-google-btn iframe {
-  max-width: 260px !important;
+  max-width: none !important;
   width: 100% !important;
 }
 
@@ -2078,7 +2078,7 @@ ul {
   }
 
   .google-btn-container iframe {
-    max-width: 200px !important;
+    max-width: none !important;
     min-width: 80px !important;
   }
 
@@ -2141,7 +2141,7 @@ ul {
     min-width: 0;
   }
   .google-btn-container iframe {
-    max-width: 180px !important;
+    max-width: none !important;
     min-width: 60px !important;
   }
   .user-avatar-img {
