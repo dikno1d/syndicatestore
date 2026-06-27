@@ -120,7 +120,7 @@ ul {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 15px;
+  gap: clamp(6px, 2vw, 15px);
   flex-wrap: nowrap;
 }
 
@@ -1771,12 +1771,13 @@ ul {
   align-items: center;
   gap: 16px;
   position: relative;
-  margin-left: 15px;
+  flex-shrink: 0;
 }
 
 .google-btn-container {
   display: flex;
   align-items: center;
+  overflow: hidden;
 }
 
 .google-btn-container iframe {
@@ -2053,11 +2054,16 @@ ul {
   
   .mobile-nav-toggle {
     display: block;
+    flex-shrink: 0;
+    margin-left: auto;
   }
 
   .user-account-wrap {
-    margin-left: 8px;
+    margin-left: 0;
     gap: 10px;
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
   }
 
   .user-name-display {
@@ -2116,7 +2122,7 @@ ul {
   .nav-container {
     padding: 10px 12px;
     flex-wrap: nowrap;
-    gap: 6px;
+    gap: 4px;
   }
   .logo-brand {
     font-size: 1.1rem;
@@ -2128,17 +2134,18 @@ ul {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 130px;
+    max-width: 110px;
   }
   .user-account-wrap {
-    margin-left: 4px;
-    gap: 6px;
+    margin-left: 0;
+    gap: 4px;
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
   }
   .google-btn-container iframe {
-    max-width: 70px !important;
-    min-width: 50px !important;
-    transform: scale(0.85);
-    transform-origin: right center;
+    max-width: 60px !important;
+    min-width: 40px !important;
   }
   .user-avatar-img {
     width: 28px;
@@ -2156,6 +2163,8 @@ ul {
   }
   .mobile-nav-toggle {
     font-size: 1.2rem;
+    flex-shrink: 0;
+    margin-left: auto;
   }
   .modal-card {
     margin: 10px;
