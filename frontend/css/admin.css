@@ -53,7 +53,7 @@ ul { list-style: none; }
 @media (max-width: 768px) {
   .admin-wrapper { grid-template-columns: 1fr; }
   .sidebar-nav { position: fixed; left: -280px; width: 260px; z-index: 1000; transition: left 0.3s ease; }
-  .sidebar-nav.open { left: 0; }
+  .sidebar-nav.mobile-open { left: 0; }
   .admin-main { margin-left: 0; }
 }
 

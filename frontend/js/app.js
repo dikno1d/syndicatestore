@@ -700,7 +700,7 @@ function renderHeroSlider() {
     const originalPriceHTML = product.originalPrice ? `<span class="slider-original-price">Rs. ${Number(product.originalPrice).toLocaleString()}</span>` : '';
     return `
       <div class="slider-slide ${index === 0 ? 'active' : ''}" data-index="${index}" data-product-id="${product._id}" style="cursor:pointer">
-        <img src="${product.image}" alt="${product.name}" loading="${index === 0 ? 'eager' : 'lazy'}">
+        <img src="${product.image}" alt="${product.name}" loading="${index === 0 ? 'eager' : 'lazy'}" onerror="this.style.display='none'">
         <div class="slider-overlay"></div>
         ${discountHTML}
         <div class="slider-indicator">${String(index + 1).padStart(2, '0')} / ${String(sliderProducts.length).padStart(2, '0')}</div>
@@ -783,7 +783,7 @@ function renderProducts() {
       <article class="product-card" data-id="${product._id}" data-slug="${product.slug || ''}">
         <div class="product-img-wrapper">
           ${badgeHTML}
-          <img src="${product.image}" alt="${product.name}" loading="lazy">
+          <img src="${product.image}" alt="${product.name}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22%3E%3Crect width=%22200%22 height=%22200%22 fill=%22%23111928%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%234b5563%22 font-size=%2214%22%3ENo Image%3C/text%3E%3C/svg%3E'">
         </div>
         <div class="product-info-wrap">
           <span class="product-category-lbl">${product.category}</span>
@@ -830,7 +830,7 @@ function openPurchaseModal(productId) {
   let textTemplate = contactSettings.customMessage || "Hello! I would like to buy: {product_name} priced at {product_price}. Is it available?";
   let parsedMsg = textTemplate
     .replace('{product_name}', product.name)
-    .replace('{product_price}', `Rs. ${product.price.toLocaleString()}`);
+    .replace('{product_price}', `Rs. ${Number(product.price).toLocaleString()}`);
   const encodedMsg = encodeURIComponent(parsedMsg);
   const cleanWhatsapp = contactSettings.whatsapp.replace(/[^0-9+]/g, '');
   contactWhatsapp.href = `https://wa.me/${cleanWhatsapp}?text=${encodedMsg}`;

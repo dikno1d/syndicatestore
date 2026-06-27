@@ -24,8 +24,14 @@ let currentInvoiceItems = [];
 const fallbackImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23111928'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%234b5563' font-size='10'%3ENo Image%3C/text%3E%3C/svg%3E";
 
 // ===== INIT =====
-document.addEventListener('DOMContentLoaded', () => {
-  checkAuth();
+document.addEventListener('DOMContentLoaded', async () => {
+  const authed = await checkAuth();
+  if (!authed) return;
+
+  document.getElementById('admin-loading').style.display = 'none';
+  const wrapper = document.querySelector('.admin-wrapper');
+  if (wrapper) wrapper.style.display = '';
+
   setupSidebar();
   setupAlerts();
   loadProducts();
@@ -52,7 +58,7 @@ async function checkAuth() {
     if (!data.authenticated) {
       localStorage.removeItem('admin_token');
       window.location.href = '/admin-login';
-      return;
+      return false;
     }
     try {
       const stored = localStorage.getItem('admin_token');
@@ -65,8 +71,10 @@ async function checkAuth() {
         }
       }
     } catch (_) {}
+    return true;
   } catch (err) {
     window.location.href = '/admin-login';
+    return false;
   }
 }
 
@@ -831,7 +839,7 @@ function renderCustomersTable() {
         ${u.name}
       </td>
       <td style="color:var(--text-gray)">${u.email}</td>
-      <td style="font-family:monospace;font-size:0.78rem;color:var(--text-gray);max-width:120px;overflow:hidden;text-overflow:ellipsis">${u.googleId}</td>
+      <td style="font-family:monospace;font-size:0.78rem;color:var(--text-gray);max-width:120px;overflow:hidden;text-overflow:ellipsis">${u.googleId || '—'}</td>
       <td>${rolePill}</td>
       <td style="font-size:0.82rem;color:var(--text-gray)">${lastLogin}</td>
       <td style="font-size:0.82rem;color:var(--text-gray)">${joined}</td>
@@ -1360,12 +1368,12 @@ async function loadAdminAccounts() {
     const data = await res.json();
     const admins = data.admins || [];
     
-    // Decode user from admin_token cookie
+    // Decode user from localStorage token
     let loggedInUser = '';
     try {
-      const tokenPayload = document.cookie.split(';').find(c => c.trim().startsWith('admin_token='));
-      if (tokenPayload) {
-        const base64 = tokenPayload.split('=')[1].split('.')[1];
+      const stored = localStorage.getItem('admin_token');
+      if (stored) {
+        const base64 = stored.split('.')[1];
         const payload = JSON.parse(atob(base64));
         loggedInUser = payload.username;
       }

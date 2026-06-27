@@ -10,6 +10,8 @@
     return _origFetch.call(this, url, opts);
   };
 
+  const loadingEl = document.getElementById('login-loading');
+  const loginWrap = document.querySelector('.login-wrap');
   const form = document.getElementById('login-form');
   const usernameInput = document.getElementById('admin-username');
   const passwordInput = document.getElementById('admin-password');
@@ -30,9 +32,20 @@
     togglePw.className = isHidden ? 'fa-solid fa-eye-slash toggle-pass' : 'fa-solid fa-eye toggle-pass';
   });
 
+  // Check auth on load - redirect if already logged in
   fetch('/api/admin/check').then(function(r) { return r.json(); }).then(function(d) {
-    if (d.authenticated) window.location.href = '/admin';
-  }).catch(function() {});
+    if (d.authenticated) {
+      window.location.href = '/admin';
+      return;
+    }
+    // Not authenticated - show the login form
+    if (loadingEl) loadingEl.style.display = 'none';
+    if (loginWrap) loginWrap.style.display = '';
+  }).catch(function() {
+    // Server unavailable - still show form
+    if (loadingEl) loadingEl.style.display = 'none';
+    if (loginWrap) loginWrap.style.display = '';
+  });
 
   form.addEventListener('submit', function(e) {
     e.preventDefault();

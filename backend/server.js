@@ -429,13 +429,22 @@ app.use('/api/', rateLimit({
   message: { error: 'Too many requests. Try again later.' }
 }));
 
-// Strict login rate limiter (per IP)
+// Strict admin login rate limiter (per IP)
 app.use('/api/admin/login', rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 15,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many login attempts. Try again in 15 minutes.' }
+}));
+
+// Rate limiter for user auth endpoints
+app.use('/api/auth/', rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Try again later.' }
 }));
 
 // Body parsers with size limits
@@ -866,7 +875,7 @@ app.get('/api/admin/users', authenticateAdmin, async (req, res) => {
         { email: { $regex: search, $options: 'i' } }
       ];
     }
-    const users = await User.find(query).sort({ createdAt: -1 }).lean();
+    const users = await User.find(query).sort({ createdAt: -1 }).select('-googleId -__v').lean();
     res.json(users);
   } catch (err) {
     res.status(500).json({ error: 'Failed to load users.' });
@@ -1624,7 +1633,6 @@ app.post('/api/admin/chat/send', authenticateAdmin, async (req, res) => {
 const frontendDir = path.resolve(__dirname, '..', 'frontend');
 
 const FRONTEND_ROUTES = {
-  '/admin': 'admin.html',
   '/admin-login': 'admin-login.html',
   '/product': 'product.html',
   '/checkout': 'checkout.html',
@@ -1635,7 +1643,44 @@ const FRONTEND_ROUTES = {
 // Serve static frontend files
 app.use(express.static(frontendDir));
 
-// Route map for pretty URLs
+// Auth-protected admin route - redirects to login if not authenticated
+app.get('/admin', (req, res) => {
+  let token = req.cookies.admin_token;
+  const authHeader = req.headers.authorization;
+  if (!token && authHeader && authHeader.startsWith('Bearer ')) {
+    token = authHeader.split(' ')[1];
+  }
+  if (!token) {
+    return res.redirect('/admin-login');
+  }
+  try {
+    jwt.verify(token, JWT_SECRET);
+    res.sendFile(path.join(frontendDir, 'admin.html'));
+  } catch {
+    if (req.cookies.admin_token) res.clearCookie('admin_token', { path: '/' });
+    return res.redirect('/admin-login');
+  }
+});
+
+// Auth-protected admin-login route - redirects to dashboard if already authenticated
+app.get('/admin-login', (req, res) => {
+  let token = req.cookies.admin_token;
+  const authHeader = req.headers.authorization;
+  if (!token && authHeader && authHeader.startsWith('Bearer ')) {
+    token = authHeader.split(' ')[1];
+  }
+  if (token) {
+    try {
+      jwt.verify(token, JWT_SECRET);
+      return res.redirect('/admin');
+    } catch {
+      if (req.cookies.admin_token) res.clearCookie('admin_token', { path: '/' });
+    }
+  }
+  res.sendFile(path.join(frontendDir, 'admin-login.html'));
+});
+
+// Route map for pretty URLs (admin excluded - handled above)
 app.get(Object.keys(FRONTEND_ROUTES), (req, res) => {
   res.sendFile(path.join(frontendDir, FRONTEND_ROUTES[req.path]));
 });

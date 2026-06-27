@@ -135,9 +135,23 @@
     .back-link:hover { color: var(--primary-neon); }
     .divider { height: 1px; background: var(--border-color); margin: 20px 0; }
   </style>
+  <style>
+    #login-loading {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; flex-direction: column; gap: 16px;
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 9999;
+    }
+    #login-loading i { font-size: 2rem; color: var(--primary-neon, #a855f7); }
+    #login-loading p { color: var(--text-gray, #a88bc9); font-size: 0.9rem; }
+  </style>
 </head>
 <body>
-  <div class="login-wrap">
+  <div id="login-loading">
+    <i class="fa-solid fa-spinner fa-spin"></i>
+    <p>Checking session...</p>
+  </div>
+
+  <div class="login-wrap" style="display:none">
     <div class="brand">
       <i class="fa-solid fa-user-shield icon"></i>
     </div>
