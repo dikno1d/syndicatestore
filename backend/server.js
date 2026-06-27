@@ -395,13 +395,14 @@ app.use(helmet({
       styleSrc: ["'self'", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com", "https://fonts.gstatic.com", "https://accounts.google.com", "https://*.gstatic.com", "'unsafe-inline'"],
       imgSrc: ["'self'", "data:", "https:", "http:"],
       fontSrc: ["'self'", "https://cdnjs.cloudflare.com", "https://fonts.gstatic.com"],
-      connectSrc: ["'self'", "https://accounts.google.com", "https://oauth2.googleapis.com"],
-      frameSrc: ["'self'", "https://accounts.google.com", "https://*.gstatic.com"],
+      connectSrc: ["'self'", "https://accounts.google.com", "https://oauth2.googleapis.com", "https://www.googleapis.com"],
+      frameSrc: ["'self'", "https://accounts.google.com", "https://oauth.googleusercontent.com", "https://*.gstatic.com"],
       frameAncestors: ["'none'"],
-      formAction: ["'self'"],
+      formAction: ["'self'", "https://accounts.google.com"],
       baseUri: ["'none'"]
     }
   },
+  crossOriginOpenerPolicy: { policy: 'unsafe-none' },
   crossOriginEmbedderPolicy: false,
   referrerPolicy: { policy: 'strict-origin-when-cross-origin' }
 }));
