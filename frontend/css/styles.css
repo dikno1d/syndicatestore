@@ -1777,11 +1777,10 @@ ul {
 .google-btn-container {
   display: flex;
   align-items: center;
-  overflow: hidden;
 }
 
 .google-btn-container iframe {
-  max-width: 130px !important;
+  max-width: 240px !important;
   min-width: 100px !important;
 }
 
@@ -2063,7 +2062,6 @@ ul {
     gap: 10px;
     flex-shrink: 1;
     min-width: 0;
-    overflow: hidden;
   }
 
   .user-name-display {
@@ -2080,8 +2078,8 @@ ul {
   }
 
   .google-btn-container iframe {
-    max-width: 80px !important;
-    min-width: 60px !important;
+    max-width: 200px !important;
+    min-width: 80px !important;
   }
 
   .cart-count-badge {
@@ -2141,11 +2139,10 @@ ul {
     gap: 4px;
     flex-shrink: 1;
     min-width: 0;
-    overflow: hidden;
   }
   .google-btn-container iframe {
-    max-width: 60px !important;
-    min-width: 40px !important;
+    max-width: 180px !important;
+    min-width: 60px !important;
   }
   .user-avatar-img {
     width: 28px;
